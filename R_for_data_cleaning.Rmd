@@ -1,0 +1,119 @@
+---
+title: "R Notebook for data cleaning"
+subtitle: Project covidistress
+output:
+  html_notebook:
+    toc: yes
+    toc_float: true
+---
+
+# Load libraries
+```{r}
+library(pacman)
+
+p_load(readr, tidyverse, stringr, multicon, psych)
+```
+
+# Load dataset
+```{r}
+d <- read_csv("covid.csv") #Relevant file name here
+```
+
+# Data cleaning
+Double check why variables are read into R as character
+```{r}
+#Remove question info & only keep actual data
+d <- d[-c(1:2), ]
+
+#View data structure
+str(d)
+```
+
+## Obtain basic demographic information
+Just double-checked the survey, the response options still include blank(dash) responses. I am unsure how it's coded in the final qualtric export. Need to compare and revise the factor conversion here..
+```{r}
+#Change categorical variables to factors
+d <- d %>% 
+  mutate(Dem_gender = factor(Dem_gender, levels = c(1:3), labels = c("Male", "Female", "Other/Undisclosed")),
+         Dem_edu = factor(Dem_edu, levels = c(1:7), labels = c("Doctorate", "College/Master degree", "Some college or equivalent", "Up to 12 years of school", "Up to 9 years of school", "Up to 6 years of school", "None")),
+         Dem_edu_mom = factor(Dem_edu_mom, levels = c(1:7), labels = c("Doctorate", "College/Master degree", "Some college or equivalent", "Up to 12 years of school", "Up to 9 years of school", "Up to 6 years of school", "None")),
+         Dem_employment = factor(Dem_employment, levels = c(1:6), labels = c("Student", "Full time employed", "Part time employed", "Self employed", "Not employed", "Retired")),
+         Dem_maritalstatus = factor(Dem_maritalstatus),
+         Dem_riskgroup = factor(Dem_riskgroup, levels = c(1:3), labels = c("Yes", "No", "Not sure"))) 
+```
+
+```{r}
+dem <- d[, grep("Dem", names(d))]
+
+describe(dem)
+```
+
+```{r}
+names(d)
+```
+
+# Create composit scores 
+## PSS10
+```{r}
+PSS10set <- d[, grep("PSS10", names(d))]
+PSS10list <- list(PSS10_avg = c(1:3, -4, -5, 6, -7, -8, 9:13)) 
+PSS10score <- scoreTest(PSS10set, PSS10list, nomiss = 0.01, rel = F)
+d <- data.frame(d, PSS10score)
+```
+
+```{r}
+#reliability of the scale
+alpha(PSS10set, keys = c("Scale_PSS10_UCLA_4",
+                         "Scale_PSS10_UCLA_5",
+                         "Scale_PSS10_UCLA_7",
+                         "Scale_PSS10_UCLA_8"))
+```
+
+## Compliance
+```{r}
+Compset <- d[, grep("Compliance", names(d))]
+complist <- list(Compliance_avg = c(1:3, -4, 5, -6)) #Not sure if buying large groceries is against the recommendations, I'd say yes?
+Compscore <- scoreTest(Compset, Complist, nomiss = 0.01, rel = F)
+d <- data.frame(d, Compscore)
+```
+
+```{r}
+#reliability of the scale
+alpha(Compset, keys = c("Compliance_4",
+                        "Compliance_6"))
+```
+
+## BFF_15
+```{r}
+BFF15set <- d[, grep("BFF_15", names(d))]
+BFF15list <- list(neu = c(1, 2, -3), 
+                  ext = c(4, 5, -6),
+                  ope = c(7, 8, 9),
+                  agr = c(10, 11, -12),
+                  con = c(13, -14, 15)) 
+BFF15score <- scoreTest(BFF15set, BFF15list, nomiss = 0.01, rel = F)
+d <- data.frame(d, BFF15score)
+```
+
+```{r}
+#reliability of the scale
+alpha(BFF15set[1:3], keys = "BFF_15_3")
+alpha(BFF15set[4:6], keys = "BFF_15_6")
+alpha(BFF15set[7:9])
+alpha(BFF15set[10:12], keys = "BFF_15_12")
+alpha(BFF15set[13:15], keys = "BFF_15_14")
+```
+
+## SPS10
+```{r}
+SPS10set <- d[, grep("SPS", names(d))]
+SPS10list <- list(SPS_avg = c(1:3, -4, 5, -6)) 
+SPS10score <- scoreTest(SPS10set, SPS10list, nomiss = 0.01, rel = F)
+d <- data.frame(d, SPS10score)
+```
+
+```{r}
+#reliability of the scale
+alpha(SPS10set)
+```
+
