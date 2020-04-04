@@ -2901,9 +2901,15 @@ div.tocify {
 <h1>Load libraries</h1>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShwYWNtYW4pXG5cbnBfbG9hZChyZWFkciwgdGlkeXZlcnNlLCBzdHJpbmdyLCBtdWx0aWNvbiwgcHN5Y2gpXG5gYGAifQ== -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShwYWNtYW4pXG5cbmBgYCJ9 -->
 <pre class="r"><code>library(pacman)
-
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoicGFja2FnZSDjpLzjuLFwYWNtYW7jpLzjuLIgd2FzIGJ1aWx0IHVuZGVyIFIgdmVyc2lvbiAzLjYuM1xuIn0= -->
+<pre><code>package 㤼㸱pacman㤼㸲 was built under R version 3.6.3</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG5wX2xvYWQocmVhZHIsIHRpZHl2ZXJzZSwgc3RyaW5nciwgbXVsdGljb24sIHBzeWNoKVxuYGBgIn0= -->
+<pre class="r"><code>
 p_load(readr, tidyverse, stringr, multicon, psych)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
@@ -2913,8 +2919,9 @@ p_load(readr, tidyverse, stringr, multicon, psych)</code></pre>
 <h1>Load dataset</h1>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZCA8LSByZWFkX2NzdihcImNvdmlkLmNzdlwiKSAjUmVsZXZhbnQgZmlsZSBuYW1lIGhlcmVcbmBgYCJ9 -->
-<pre class="r"><code>d &lt;- read_csv(&quot;covid.csv&quot;) #Relevant file name here</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZCA8LSByZWFkX2NzdihcImNvdmlkLmNzdlwiKSAjUmVsZXZhbnQgZmlsZSBuYW1lIGhlcmVcblxuYGBgIn0= -->
+<pre class="r"><code>d &lt;- read_csv(&quot;covid.csv&quot;) #Relevant file name here
+</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-output-begin eyJkYXRhIjoiUGFyc2VkIHdpdGggY29sdW1uIHNwZWNpZmljYXRpb246XG5jb2xzKFxuICAuZGVmYXVsdCA9IGNvbF9jaGFyYWN0ZXIoKVxuKVxuU2VlIHNwZWMoLi4uKSBmb3IgZnVsbCBjb2x1bW4gc3BlY2lmaWNhdGlvbnMuXG4ifQ== -->
 <pre><code>Parsed with column specification:
@@ -2931,12 +2938,10 @@ See spec(...) for full column specifications.</code></pre>
 <p>Double check why variables are read into R as character</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI1JlbW92ZSBxdWVzdGlvbiBpbmZvICYgb25seSBrZWVwIGFjdHVhbCBkYXRhXG5kIDwtIGRbLWMoMToyKSwgXVxuXG4jVmlldyBkYXRhIHN0cnVjdHVyZVxuc3RyKGQpXG5gYGAifQ== -->
-<pre class="r"><code>#Remove question info &amp; only keep actual data
-d &lt;- d[-c(1:2), ]
-
-#View data structure
-str(d)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI1ZpZXcgZGF0YSBzdHJ1Y3R1cmVcbnN0cihkKVxuXG5gYGAifQ== -->
+<pre class="r"><code>#View data structure
+str(d)
+</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-output-begin eyJkYXRhIjoiQ2xhc3NlcyDigJh0YmxfZGbigJksIOKAmHRibOKAmSBhbmQgJ2RhdGEuZnJhbWUnOlx0MiBvYnMuIG9mICAxMzUgdmFyaWFibGVzOlxuICQgU3RhcnREYXRlICAgICAgICAgICAgOiBjaHIgIFwiIyMjIyMjIyMjI1wiIFwiIyMjIyMjIyMjI1wiXG4gJCBFbmREYXRlICAgICAgICAgICAgICA6IGNociAgXCIjIyMjIyMjIyMjXCIgXCIjIyMjIyMjIyMjXCJcbiAkIFN0YXR1cyAgICAgICAgICAgICAgIDogY2hyICBcIjBcIiBcIjBcIlxuICQgUHJvZ3Jlc3MgICAgICAgICAgICAgOiBjaHIgIFwiMTAwXCIgXCIxMDBcIlxuICQgRHVyYXRpb24gKGluIHNlY29uZHMpOiBjaHIgIFwiMTVcIiBcIjEyMTdcIlxuICQgRmluaXNoZWQgICAgICAgICAgICAgOiBjaHIgIFwiMVwiIFwiMVwiXG4gJCBSZWNvcmRlZERhdGUgICAgICAgICA6IGNociAgXCIjIyMjIyMjIyMjXCIgXCIjIyMjIyMjIyMjXCJcbiAkIFJlc3BvbnNlSWQgICAgICAgICAgIDogY2hyICBcIlJfMkI5dmZrVG93M3RpbzZNXCIgXCJSXzJ1SENPYWhCNERyWTVNYlwiXG4gJCBEaXN0cmlidXRpb25DaGFubmVsICA6IGNociAgXCJhbm9ueW1vdXNcIiBcImFub255bW91c1wiXG4gJCBVc2VyTGFuZ3VhZ2UgICAgICAgICA6IGNociAgXCJQTFwiIFwiREFcIlxuICQgQ29uc2VudCAgICAgICAgICAgICAgOiBjaHIgIFwiMlwiIFwiMVwiXG4gJCBEZW1fYWdlICAgICAgICAgICAgICA6IGNociAgTkEgXCI0OVwiXG4gJCBEZW1fZ2VuZGVyICAgICAgICAgICA6IGNociAgTkEgXCIyXCJcbiAkIERlbV9lZHUgICAgICAgICAgICAgIDogY2hyICBOQSBcIjVcIlxuICQgRGVtX2VkdV9tb20gICAgICAgICAgOiBjaHIgIE5BIFwiNVwiXG4gJCBEZW1fZW1wbG95bWVudCAgICAgICA6IGNociAgTkEgXCI3XCJcbiAkIENvdW50cnkgICAgICAgICAgICAgIDogY2hyICBOQSBcIjQ4XCJcbiAkIERlbV9FeHBhdCAgICAgICAgICAgIDogY2hyICBOQSBcIjFcIlxuICQgRGVtX3N0YXRlICAgICAgICAgICAgOiBjaHIgIE5BIE5BXG4gJCBEZW1fbWFyaXRhbHN0YXR1cyAgICA6IGNociAgTkEgXCI2XCJcbiAkIERlbV9kZXBlbmRlbnRzICAgICAgIDogY2hyICBOQSBcIjJcIlxuICQgRGVtX3Jpc2tncm91cCAgICAgICAgOiBjaHIgIE5BIFwiMVwiXG4gJCBEZW1faXNsb2xhdGlvbiAgICAgICA6IGNociAgTkEgXCIzXCJcbiAkIERlbV9pc29sYXRpb25fYWR1bHRzIDogY2hyICBOQSBcIjFcIlxuICQgRGVtX2lzb2xhdGlvbl9raWRzICAgOiBjaHIgIE5BIFwiMVwiXG4gJCBBRF9nYWluICAgICAgICAgICAgICA6IGNociAgTkEgTkFcbiAkIEFEX2xvc3MgICAgICAgICAgICAgIDogY2hyICBOQSBcIjFcIlxuICQgQURfY2hlY2sgICAgICAgICAgICAgOiBjaHIgIE5BIFwiM1wiXG4gJCBTY2FsZV9QU1MxMF9VQ0xBXzEgICA6IGNociAgTkEgXCI1XCJcbiAkIFNjYWxlX1BTUzEwX1VDTEFfMiAgIDogY2hyICBOQSBcIjNcIlxuICQgU2NhbGVfUFNTMTBfVUNMQV8zICAgOiBjaHIgIE5BIFwiNFwiXG4gJCBTY2FsZV9QU1MxMF9VQ0xBXzQgICA6IGNociAgTkEgXCIzXCJcbiAkIFNjYWxlX1BTUzEwX1VDTEFfNSAgIDogY2hyICBOQSBcIjNcIlxuICQgU2NhbGVfUFNTMTBfVUNMQV82ICAgOiBjaHIgIE5BIFwiM1wiXG4gJCBTY2FsZV9QU1MxMF9VQ0xBXzcgICA6IGNociAgTkEgXCIzXCJcbiAkIFNjYWxlX1BTUzEwX1VDTEFfOCAgIDogY2hyICBOQSBcIjNcIlxuICQgU2NhbGVfUFNTMTBfVUNMQV85ICAgOiBjaHIgIE5BIFwiNVwiXG4gJCBTY2FsZV9QU1MxMF9VQ0xBXzEwICA6IGNociAgTkEgXCI0XCJcbiAkIFNjYWxlX1BTUzEwX1VDTEFfMTEgIDogY2hyICBOQSBcIjRcIlxuICQgU2NhbGVfUFNTMTBfVUNMQV8xMiAgOiBjaHIgIE5BIFwiNFwiXG4gJCBTY2FsZV9QU1MxMF9VQ0xBXzEzICA6IGNociAgTkEgXCI1XCJcbiAkIE9FQ0RfcGVvcGxlXzEgICAgICAgIDogY2hyICBOQSBcIjVcIlxuICQgT0VDRF9wZW9wbGVfMiAgICAgICAgOiBjaHIgIE5BIFwiNVwiXG4gJCBPRUNEX2luc2l0aXR1dGlvbnNfMSA6IGNociAgTkEgXCI1XCJcbiAkIE9FQ0RfaW5zaXRpdHV0aW9uc18yIDogY2hyICBOQSBcIjVcIlxuICQgT0VDRF9pbnNpdGl0dXRpb25zXzMgOiBjaHIgIE5BIFwiNVwiXG4gJCBPRUNEX2luc2l0aXR1dGlvbnNfNCA6IGNociAgTkEgXCIxXCJcbiAkIE9FQ0RfaW5zaXRpdHV0aW9uc181IDogY2hyICBOQSBOQVxuICQgT0VDRF9pbnNpdGl0dXRpb25zXzYgOiBjaHIgIE5BIFwiNVwiXG4gJCBDb3JvbmFfY29uY2VybnNfMSAgICA6IGNociAgTkEgXCI1XCJcbiAkIENvcm9uYV9jb25jZXJuc18yICAgIDogY2hyICBOQSBcIjVcIlxuICQgQ29yb25hX2NvbmNlcm5zXzMgICAgOiBjaHIgIE5BIFwiNVwiXG4gJCBDb3JvbmFfY29uY2VybnNfNCAgICA6IGNociAgTkEgXCI2XCJcbiAkIENvcm9uYV9jb25jZXJuc181ICAgIDogY2hyICBOQSBcIjZcIlxuICQgVHJ1c3RfY291bnRyeW1lYXN1cmUgOiBjaHIgIE5BIFwiNTlcIlxuICQgQ29tcGxpYW5jZV8xICAgICAgICAgOiBjaHIgIE5BIFwiNVwiXG4gJCBDb21wbGlhbmNlXzIgICAgICAgICA6IGNociAgTkEgXCI1XCJcbiAkIENvbXBsaWFuY2VfMyAgICAgICAgIDogY2hyICBOQSBcIjVcIlxuICQgQ29tcGxpYW5jZV80ICAgICAgICAgOiBjaHIgIE5BIFwiNVwiXG4gJCBDb21wbGlhbmNlXzUgICAgICAgICA6IGNociAgTkEgXCI1XCJcbiAkIENvbXBsaWFuY2VfNiAgICAgICAgIDogY2hyICBOQSBcIjRcIlxuICQgQkZGXzE1XzEgICAgICAgICAgICAgOiBjaHIgIE5BIFwiNVwiXG4gJCBCRkZfMTVfMiAgICAgICAgICAgICA6IGNociAgTkEgXCI1XCJcbiAkIEJGRl8xNV8zICAgICAgICAgICAgIDogY2hyICBOQSBcIjRcIlxuICQgQkZGXzE1XzQgICAgICAgICAgICAgOiBjaHIgIE5BIFwiM1wiXG4gJCBCRkZfMTVfNSAgICAgICAgICAgICA6IGNociAgTkEgXCI1XCJcbiAkIEJGRl8xNV82ICAgICAgICAgICAgIDogY2hyICBOQSBcIjRcIlxuICQgQkZGXzE1XzcgICAgICAgICAgICAgOiBjaHIgIE5BIFwiNlwiXG4gJCBCRkZfMTVfOCAgICAgICAgICAgICA6IGNociAgTkEgXCI2XCJcbiAkIEJGRl8xNV85ICAgICAgICAgICAgIDogY2hyICBOQSBcIjRcIlxuICQgQkZGXzE1XzEwICAgICAgICAgICAgOiBjaHIgIE5BIFwiNFwiXG4gJCBCRkZfMTVfMTEgICAgICAgICAgICA6IGNociAgTkEgXCI0XCJcbiAkIEJGRl8xNV8xMiAgICAgICAgICAgIDogY2hyICBOQSBcIjRcIlxuICQgQkZGXzE1XzEzICAgICAgICAgICAgOiBjaHIgIE5BIFwiM1wiXG4gJCBCRkZfMTVfMTQgICAgICAgICAgICA6IGNociAgTkEgXCIzXCJcbiAkIEJGRl8xNV8xNSAgICAgICAgICAgIDogY2hyICBOQSBcIjRcIlxuICQgRXhwbF9EaXN0cmVzc18xICAgICAgOiBjaHIgIE5BIFwiN1wiXG4gJCBFeHBsX0Rpc3RyZXNzXzIgICAgICA6IGNociAgTkEgXCI3XCJcbiAkIEV4cGxfRGlzdHJlc3NfMyAgICAgIDogY2hyICBOQSBcIjdcIlxuICQgRXhwbF9EaXN0cmVzc180ICAgICAgOiBjaHIgIE5BIFwiN1wiXG4gJCBFeHBsX0Rpc3RyZXNzXzUgICAgICA6IGNociAgTkEgXCI3XCJcbiAkIEV4cGxfRGlzdHJlc3NfNiAgICAgIDogY2hyICBOQSBcIjZcIlxuICQgRXhwbF9EaXN0cmVzc183ICAgICAgOiBjaHIgIE5BIFwiNVwiXG4gJCBFeHBsX0Rpc3RyZXNzXzggICAgICA6IGNociAgTkEgXCI0XCJcbiAkIEV4cGxfRGlzdHJlc3NfOSAgICAgIDogY2hyICBOQSBcIjdcIlxuICQgRXhwbF9EaXN0cmVzc18xMCAgICAgOiBjaHIgIE5BIFwiNlwiXG4gJCBFeHBsX0Rpc3RyZXNzXzExICAgICA6IGNociAgTkEgXCI2XCJcbiAkIEV4cGxfRGlzdHJlc3NfMTIgICAgIDogY2hyICBOQSBcIjZcIlxuICQgRXhwbF9EaXN0cmVzc18xMyAgICAgOiBjaHIgIE5BIFwiNlwiXG4gJCBFeHBsX0Rpc3RyZXNzXzE0ICAgICA6IGNociAgTkEgXCI2XCJcbiAkIEV4cGxfRGlzdHJlc3NfMTUgICAgIDogY2hyICBOQSBcIjdcIlxuICQgRXhwbF9EaXN0cmVzc18xNiAgICAgOiBjaHIgIE5BIFwiNlwiXG4gJCBFeHBsX0Rpc3RyZXNzXzE3ICAgICA6IGNociAgTkEgXCI1XCJcbiAkIEV4cGxfRGlzdHJlc3NfMTggICAgIDogY2hyICBOQSBcIjZcIlxuICQgRXhwbF9EaXN0cmVzc18xOSAgICAgOiBjaHIgIE5BIFwiNlwiXG4gJCBFeHBsX0Rpc3RyZXNzXzIwICAgICA6IGNociAgTkEgXCI2XCJcbiAkIEV4cGxfRGlzdHJlc3NfMjEgICAgIDogY2hyICBOQSBcIjZcIlxuICQgRXhwbF9EaXN0cmVzc18yMiAgICAgOiBjaHIgIE5BIFwiN1wiXG4gJCBFeHBsX0Rpc3RyZXNzXzIzICAgICA6IGNociAgTkEgXCI2XCJcbiAgW2xpc3Qgb3V0cHV0IHRydW5jYXRlZF1cbiJ9 -->
 <pre><code>Classes ‘tbl_df’, ‘tbl’ and &#39;data.frame&#39;:   2 obs. of  135 variables:
@@ -3048,29 +3053,42 @@ str(d)</code></pre>
 <p>Just double-checked the survey, the response options still include blank(dash) responses. I am unsure how it’s coded in the final qualtric export. Need to compare and revise the factor conversion here..</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI0NoYW5nZSBjYXRlZ29yaWNhbCB2YXJpYWJsZXMgdG8gZmFjdG9yc1xuZCA8LSBkICU+JSBcbiAgbXV0YXRlKERlbV9nZW5kZXIgPSBmYWN0b3IoRGVtX2dlbmRlciwgbGV2ZWxzID0gYygxOjMpLCBsYWJlbHMgPSBjKFwiTWFsZVwiLCBcIkZlbWFsZVwiLCBcIk90aGVyL1VuZGlzY2xvc2VkXCIpKSxcbiAgICAgICAgIERlbV9lZHUgPSBmYWN0b3IoRGVtX2VkdSwgbGV2ZWxzID0gYygxOjcpLCBsYWJlbHMgPSBjKFwiRG9jdG9yYXRlXCIsIFwiQ29sbGVnZS9NYXN0ZXIgZGVncmVlXCIsIFwiU29tZSBjb2xsZWdlIG9yIGVxdWl2YWxlbnRcIiwgXCJVcCB0byAxMiB5ZWFycyBvZiBzY2hvb2xcIiwgXCJVcCB0byA5IHllYXJzIG9mIHNjaG9vbFwiLCBcIlVwIHRvIDYgeWVhcnMgb2Ygc2Nob29sXCIsIFwiTm9uZVwiKSksXG4gICAgICAgICBEZW1fZWR1X21vbSA9IGZhY3RvcihEZW1fZWR1X21vbSwgbGV2ZWxzID0gYygxOjcpLCBsYWJlbHMgPSBjKFwiRG9jdG9yYXRlXCIsIFwiQ29sbGVnZS9NYXN0ZXIgZGVncmVlXCIsIFwiU29tZSBjb2xsZWdlIG9yIGVxdWl2YWxlbnRcIiwgXCJVcCB0byAxMiB5ZWFycyBvZiBzY2hvb2xcIiwgXCJVcCB0byA5IHllYXJzIG9mIHNjaG9vbFwiLCBcIlVwIHRvIDYgeWVhcnMgb2Ygc2Nob29sXCIsIFwiTm9uZVwiKSksXG4gICAgICAgICBEZW1fZW1wbG95bWVudCA9IGZhY3RvcihEZW1fZW1wbG95bWVudCwgbGV2ZWxzID0gYygxOjYpLCBsYWJlbHMgPSBjKFwiU3R1ZGVudFwiLCBcIkZ1bGwgdGltZSBlbXBsb3llZFwiLCBcIlBhcnQgdGltZSBlbXBsb3llZFwiLCBcIlNlbGYgZW1wbG95ZWRcIiwgXCJOb3QgZW1wbG95ZWRcIiwgXCJSZXRpcmVkXCIpKSxcbiAgICAgICAgIERlbV9tYXJpdGFsc3RhdHVzID0gZmFjdG9yKERlbV9tYXJpdGFsc3RhdHVzKSxcbiAgICAgICAgIERlbV9yaXNrZ3JvdXAgPSBmYWN0b3IoRGVtX3Jpc2tncm91cCwgbGV2ZWxzID0gYygxOjMpLCBsYWJlbHMgPSBjKFwiWWVzXCIsIFwiTm9cIiwgXCJOb3Qgc3VyZVwiKSkpIFxuYGBgIn0= -->
-<pre class="r"><code>#Change categorical variables to factors
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuI0NoYW5nZSBjYXRlZ29yaWNhbCB2YXJpYWJsZXMgdG8gZmFjdG9yc1xuZCA8LSBkICU+JSBcbiAgbXV0YXRlKERlbV9nZW5kZXIgPSBmYWN0b3IoRGVtX2dlbmRlciwgbGV2ZWxzID0gYygxOjMpLCBsYWJlbHMgPSBjKFxcTWFsZVxcLCBcXEZlbWFsZVxcLCBcXE90aGVyL1VuZGlzY2xvc2VkXFwpKSxcbiAgICAgICAgIERlbV9lZHUgPSBmYWN0b3IoRGVtX2VkdSwgbGV2ZWxzID0gYygxOjcpLCBsYWJlbHMgPSBjKFxcRG9jdG9yYXRlXFwsIFxcQ29sbGVnZS9NYXN0ZXIgZGVncmVlXFwsIFxcU29tZSBjb2xsZWdlIG9yIGVxdWl2YWxlbnRcXCwgXFxVcCB0byAxMiB5ZWFycyBvZiBzY2hvb2xcXCwgXFxVcCB0byA5IHllYXJzIG9mIHNjaG9vbFxcLCBcXFVwIHRvIDYgeWVhcnMgb2Ygc2Nob29sXFwsIFxcTm9uZVxcKSksXG4gICAgICAgICBEZW1fZWR1X21vbSA9IGZhY3RvcihEZW1fZWR1X21vbSwgbGV2ZWxzID0gYygxOjcpLCBsYWJlbHMgPSBjKFxcRG9jdG9yYXRlXFwsIFxcQ29sbGVnZS9NYXN0ZXIgZGVncmVlXFwsIFxcU29tZSBjb2xsZWdlIG9yIGVxdWl2YWxlbnRcXCwgXFxVcCB0byAxMiB5ZWFycyBvZiBzY2hvb2xcXCwgXFxVcCB0byA5IHllYXJzIG9mIHNjaG9vbFxcLCBcXFVwIHRvIDYgeWVhcnMgb2Ygc2Nob29sXFwsIFxcTm9uZVxcKSksXG4gICAgICAgICBEZW1fZW1wbG95bWVudCA9IGZhY3RvcihEZW1fZW1wbG95bWVudCwgbGV2ZWxzID0gYygxOjYpLCBsYWJlbHMgPSBjKFxcU3R1ZGVudFxcLCBcXEZ1bGwgdGltZSBlbXBsb3llZFxcLCBcXFBhcnQgdGltZSBlbXBsb3llZFxcLCBcXFNlbGYgZW1wbG95ZWRcXCwgXFxOb3QgZW1wbG95ZWRcXCwgXFxSZXRpcmVkXFwpKSxcbiAgICAgICAgIERlbV9tYXJpdGFsc3RhdHVzID0gZmFjdG9yKERlbV9tYXJpdGFsc3RhdHVzKSxcbiAgICAgICAgIERlbV9yaXNrZ3JvdXAgPSBmYWN0b3IoRGVtX3Jpc2tncm91cCwgbGV2ZWxzID0gYygxOjMpLCBsYWJlbHMgPSBjKFxcWWVzXFwsIFxcTm9cXCwgXFxOb3Qgc3VyZVxcKSkpIFxuYGBgXG5gYGAifQ== -->
+<pre class="r"><code>```r
+#Change categorical variables to factors
 d &lt;- d %&gt;% 
-  mutate(Dem_gender = factor(Dem_gender, levels = c(1:3), labels = c(&quot;Male&quot;, &quot;Female&quot;, &quot;Other/Undisclosed&quot;)),
-         Dem_edu = factor(Dem_edu, levels = c(1:7), labels = c(&quot;Doctorate&quot;, &quot;College/Master degree&quot;, &quot;Some college or equivalent&quot;, &quot;Up to 12 years of school&quot;, &quot;Up to 9 years of school&quot;, &quot;Up to 6 years of school&quot;, &quot;None&quot;)),
-         Dem_edu_mom = factor(Dem_edu_mom, levels = c(1:7), labels = c(&quot;Doctorate&quot;, &quot;College/Master degree&quot;, &quot;Some college or equivalent&quot;, &quot;Up to 12 years of school&quot;, &quot;Up to 9 years of school&quot;, &quot;Up to 6 years of school&quot;, &quot;None&quot;)),
-         Dem_employment = factor(Dem_employment, levels = c(1:6), labels = c(&quot;Student&quot;, &quot;Full time employed&quot;, &quot;Part time employed&quot;, &quot;Self employed&quot;, &quot;Not employed&quot;, &quot;Retired&quot;)),
+  mutate(Dem_gender = factor(Dem_gender, levels = c(1:3), labels = c(\Male\, \Female\, \Other/Undisclosed\)),
+         Dem_edu = factor(Dem_edu, levels = c(1:7), labels = c(\Doctorate\, \College/Master degree\, \Some college or equivalent\, \Up to 12 years of school\, \Up to 9 years of school\, \Up to 6 years of school\, \None\)),
+         Dem_edu_mom = factor(Dem_edu_mom, levels = c(1:7), labels = c(\Doctorate\, \College/Master degree\, \Some college or equivalent\, \Up to 12 years of school\, \Up to 9 years of school\, \Up to 6 years of school\, \None\)),
+         Dem_employment = factor(Dem_employment, levels = c(1:6), labels = c(\Student\, \Full time employed\, \Part time employed\, \Self employed\, \Not employed\, \Retired\)),
          Dem_maritalstatus = factor(Dem_maritalstatus),
-         Dem_riskgroup = factor(Dem_riskgroup, levels = c(1:3), labels = c(&quot;Yes&quot;, &quot;No&quot;, &quot;Not sure&quot;))) </code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGVtIDwtIGRbLCBncmVwKFwiRGVtXCIsIG5hbWVzKGQpKV1cblxuZGVzY3JpYmUoZGVtKVxuYGBgIn0= -->
-<pre class="r"><code>dem &lt;- d[, grep(&quot;Dem&quot;, names(d))]
+         Dem_riskgroup = factor(Dem_riskgroup, levels = c(1:3), labels = c(\Yes\, \No\, \Not sure\))) </code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
 
-describe(dem)</code></pre>
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGVzY3JpYmUoZGVtKVxuXG5gYGAifQ== --&gt;
+
+```r
+describe(dem)
+</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-output-begin eyJkYXRhIjoibm8gbm9uLW1pc3NpbmcgYXJndW1lbnRzIHRvIG1pbjsgcmV0dXJuaW5nIEluZm5vIG5vbi1taXNzaW5nIGFyZ3VtZW50cyB0byBtaW47IHJldHVybmluZyBJbmZubyBub24tbWlzc2luZyBhcmd1bWVudHMgdG8gbWF4OyByZXR1cm5pbmcgLUluZm5vIG5vbi1taXNzaW5nIGFyZ3VtZW50cyB0byBtYXg7IHJldHVybmluZyAtSW5mXG4ifQ== -->
 <pre><code>no non-missing arguments to min; returning Infno non-missing arguments to min; returning Infno non-missing arguments to max; returning -Infno non-missing arguments to max; returning -Inf</code></pre>
 <!-- rnb-output-end -->
-<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibmNvbCI6MTMsIm5yb3ciOjEzfSwicmRmIjoiSDRzSUFBQUFBQUFBQnQxVlRXL1VNQkIxZHplNzI0VitpSUxFZ1FOQ0NLR1Z1aEpGUFZPSkluRkVuSHBibWJVSlZtSTdzaDI2bk1wdjRSZHk1TlJpWjJleWlkV2xqY1NIeEVqV20vZnM4WGdtVHZMKzlPemw1R3hDQ09tVC90Q1B4THRrK1ByZGk2UGpJMElHUGMrMnlJQnNCMXo2VlFmZTJmRmpOK0NyNzZTeUV3STRCdHdIdkEvNEVQQVI0R1BBSjRCUEFaOEJQZ2VjRXJSV3ZrMkl0b25mRmpIZnlkdXZxM09RcUI3QWl4L3R1SmhqWE0zSHY4NTNVZkhSdHorTnQ2NFAxdGYxUmJ4cmZYKzduK1FHYS9Uald0N0JPdlN6VVYvRU1lNTM5Zk1xaW90NTEzemtCc1A5Ti9FTzlrL2VoLzgzWCt0RG5pZ3F1ZlhPZmpnRWlJUFAxRmo4MGlzVUphZm85eXdEYnlnNUU3VStja1pJcndEdFM3cDJoVnFyUzh4dXFFbzVKckFaUHdkL25KWEdhU3RzblpCSEI5ODIrbngyM2VISHAxek9hY3Fud084RW5uTEZ1SmsybDNCV0lyOExmQzYxUkcydjBtU1I2eStTSzRmeUpNaHZsZ1Z0SzlaUlYyZThGeFJKalhBMER4T2xiVzNLZUJGT28xd3Q3d2JaQ0p1bFJwZEZhN0d3dWM2cEUxcWgvR0FsZ3pxbnJNelhPeDIwSnpQQi9GVDB4QmM1dGRnMEZDZU1PanI3YUh3L1BidU1Ra2E2Q052NW9GNzQ1eWRSOEphSmhMMVNoU2ZERGhlZlNwVWRIb2NFMWZScTdEU3c0WWVVdlN2WUtzSDd4VlVxRkY2UkpLY2ZlSTVkOHplZ3VnQ3p3Z2psc0JLdjJwblR2dmVvTEhTT1NsVWJ1ZndKNW9iK2R1c0lBQUE9In0= -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibmNvbCI6MTMsIm5yb3ciOjEzfSwicmRmIjoiSDRzSUFBQUFBQUFBQnQxVlMyL1VNQkIyczV2ZDdVSWZvaUJ4NElBUVFtaWxybmlJWHFuVUluRkVuSHBibVkwSlZtSTdzaDI2bk1wdjRSZHk3S210blozSkpsYVhOaElQaVpHaWI3N1BuaG5QeEp2OWVIenllbnd5Sm9UMFNHOFFrVjdzWERJNCt2RHkxWnNYaFBRanh6WkluMng2WExoZGU4N1pjcysyeDdjL1NXV0hCSEFFdUF0NEgvQWg0Q1BBeDRCUEFKOENQZ044RGpnaGFLMTY2eEJ0SGI4dFlyM0Q5OStYNXlCQlA0Qm41KzI0a0dOY3pVZS9ybmRXOGVHUFA0MjM3Zy8yMS8wRnZHdC9mM3VlNUFacnpPTmEzc0U2ekxQUlg4QXg3bmZOOHpLSUMzblhldVFHdy96cmVBZjdKNytILzdkZTYwTWVTeXFZY2M2dVB3U0kvYTlVRy96U1N4UUZvK2hISmdGdklGakNhMzFvTlJkT0Fkb1RkT1Z5dVZJWFdGMVRtVElzWURKMkN2NG9LN1ZWaHB1NklBc092cW5WNmZTNnc0K09tWmpSbEUyQTMvRThaVEpoZXRMY3dwSVMrVjNnTTZFRWFqdVZKb3BjZlJOTVdwVEhYbjYzS0doYk1aYmF1dUk5cndpcXVhVzVYeWhOSzJuQ0NuOGFhV3Q1Mjh1YW15elZxaXhhbTduSlZVNHRWeExsQjBzWjFCbE55bnlWYWErOW1QSEVMUVZ2Zko1VGcwTkRjWnhRUzZlZnRadW5ZeGRCeUZBVlBwMExpdngvZmh3RWIraEEyQ21sZnpQSi92eExLYlA5QTErZ1dsNCtXdzFzK0w1a2RBbXBZcnhmVEtaYzRoV0pjL3FKNVRnMWR3T3FDekF0TkpjV08zR3FtVnJsWm8vS1hPV29WTDJSaXl1WHRtVUE2d2dBQUE9PSJ9 -->
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["vars"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["n"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["mean"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["sd"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["median"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["trimmed"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["mad"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["min"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["max"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["range"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["skew"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["kurtosis"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["se"],"name":[13],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"1","3":"49","4":"NA","5":"49","6":"49","7":"0","8":"49","9":"49","10":"0","11":"NA","12":"NA","13":"NA","_rn_":"Dem_age*"},{"1":"2","2":"1","3":"2","4":"NA","5":"2","6":"2","7":"0","8":"2","9":"2","10":"0","11":"NA","12":"NA","13":"NA","_rn_":"Dem_gender*"},{"1":"3","2":"1","3":"5","4":"NA","5":"5","6":"5","7":"0","8":"5","9":"5","10":"0","11":"NA","12":"NA","13":"NA","_rn_":"Dem_edu*"},{"1":"4","2":"1","3":"5","4":"NA","5":"5","6":"5","7":"0","8":"5","9":"5","10":"0","11":"NA","12":"NA","13":"NA","_rn_":"Dem_edu_mom*"},{"1":"5","2":"0","3":"NaN","4":"NA","5":"NA","6":"NaN","7":"NA","8":"Inf","9":"-Inf","10":"-Inf","11":"NA","12":"NA","13":"NA","_rn_":"Dem_employment*"},{"1":"6","2":"1","3":"1","4":"NA","5":"1","6":"1","7":"0","8":"1","9":"1","10":"0","11":"NA","12":"NA","13":"NA","_rn_":"Dem_Expat*"},{"1":"7","2":"0","3":"NaN","4":"NA","5":"NA","6":"NaN","7":"NA","8":"Inf","9":"-Inf","10":"-Inf","11":"NA","12":"NA","13":"NA","_rn_":"Dem_state*"},{"1":"8","2":"1","3":"1","4":"NA","5":"1","6":"1","7":"0","8":"1","9":"1","10":"0","11":"NA","12":"NA","13":"NA","_rn_":"Dem_maritalstatus*"},{"1":"9","2":"1","3":"2","4":"NA","5":"2","6":"2","7":"0","8":"2","9":"2","10":"0","11":"NA","12":"NA","13":"NA","_rn_":"Dem_dependents*"},{"1":"10","2":"1","3":"1","4":"NA","5":"1","6":"1","7":"0","8":"1","9":"1","10":"0","11":"NA","12":"NA","13":"NA","_rn_":"Dem_riskgroup*"},{"1":"11","2":"1","3":"3","4":"NA","5":"3","6":"3","7":"0","8":"3","9":"3","10":"0","11":"NA","12":"NA","13":"NA","_rn_":"Dem_islolation*"},{"1":"12","2":"1","3":"1","4":"NA","5":"1","6":"1","7":"0","8":"1","9":"1","10":"0","11":"NA","12":"NA","13":"NA","_rn_":"Dem_isolation_adults*"},{"1":"13","2":"1","3":"1","4":"NA","5":"1","6":"1","7":"0","8":"1","9":"1","10":"0","11":"NA","12":"NA","13":"NA","_rn_":"Dem_isolation_kids*"}],"options":{"columns":{"min":{},"max":[10],"total":[13]},"rows":{"min":[10],"max":[10],"total":[13]},"pages":{}}}
@@ -3081,91 +3099,100 @@ describe(dem)</code></pre>
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubmFtZXMoZClcbmBgYCJ9 -->
-<pre class="r"><code>names(d)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiICBbMV0gXCJTdGFydERhdGVcIiAgICAgICAgICAgICBcIkVuZERhdGVcIiAgICAgICAgICAgICAgIFwiU3RhdHVzXCIgICAgICAgICAgICAgICAgXCJQcm9ncmVzc1wiICAgICAgICAgICAgICBcIkR1cmF0aW9uIChpbiBzZWNvbmRzKVwiXG4gIFs2XSBcIkZpbmlzaGVkXCIgICAgICAgICAgICAgIFwiUmVjb3JkZWREYXRlXCIgICAgICAgICAgXCJSZXNwb25zZUlkXCIgICAgICAgICAgICBcIkRpc3RyaWJ1dGlvbkNoYW5uZWxcIiAgIFwiVXNlckxhbmd1YWdlXCIgICAgICAgICBcbiBbMTFdIFwiQ29uc2VudFwiICAgICAgICAgICAgICAgXCJEZW1fYWdlXCIgICAgICAgICAgICAgICBcIkRlbV9nZW5kZXJcIiAgICAgICAgICAgIFwiRGVtX2VkdVwiICAgICAgICAgICAgICAgXCJEZW1fZWR1X21vbVwiICAgICAgICAgIFxuIFsxNl0gXCJEZW1fZW1wbG95bWVudFwiICAgICAgICBcIkNvdW50cnlcIiAgICAgICAgICAgICAgIFwiRGVtX0V4cGF0XCIgICAgICAgICAgICAgXCJEZW1fc3RhdGVcIiAgICAgICAgICAgICBcIkRlbV9tYXJpdGFsc3RhdHVzXCIgICAgXG4gWzIxXSBcIkRlbV9kZXBlbmRlbnRzXCIgICAgICAgIFwiRGVtX3Jpc2tncm91cFwiICAgICAgICAgXCJEZW1faXNsb2xhdGlvblwiICAgICAgICBcIkRlbV9pc29sYXRpb25fYWR1bHRzXCIgIFwiRGVtX2lzb2xhdGlvbl9raWRzXCIgICBcbiBbMjZdIFwiQURfZ2FpblwiICAgICAgICAgICAgICAgXCJBRF9sb3NzXCIgICAgICAgICAgICAgICBcIkFEX2NoZWNrXCIgICAgICAgICAgICAgIFwiU2NhbGVfUFNTMTBfVUNMQV8xXCIgICAgXCJTY2FsZV9QU1MxMF9VQ0xBXzJcIiAgIFxuIFszMV0gXCJTY2FsZV9QU1MxMF9VQ0xBXzNcIiAgICBcIlNjYWxlX1BTUzEwX1VDTEFfNFwiICAgIFwiU2NhbGVfUFNTMTBfVUNMQV81XCIgICAgXCJTY2FsZV9QU1MxMF9VQ0xBXzZcIiAgICBcIlNjYWxlX1BTUzEwX1VDTEFfN1wiICAgXG4gWzM2XSBcIlNjYWxlX1BTUzEwX1VDTEFfOFwiICAgIFwiU2NhbGVfUFNTMTBfVUNMQV85XCIgICAgXCJTY2FsZV9QU1MxMF9VQ0xBXzEwXCIgICBcIlNjYWxlX1BTUzEwX1VDTEFfMTFcIiAgIFwiU2NhbGVfUFNTMTBfVUNMQV8xMlwiICBcbiBbNDFdIFwiU2NhbGVfUFNTMTBfVUNMQV8xM1wiICAgXCJPRUNEX3Blb3BsZV8xXCIgICAgICAgICBcIk9FQ0RfcGVvcGxlXzJcIiAgICAgICAgIFwiT0VDRF9pbnNpdGl0dXRpb25zXzFcIiAgXCJPRUNEX2luc2l0aXR1dGlvbnNfMlwiIFxuIFs0Nl0gXCJPRUNEX2luc2l0aXR1dGlvbnNfM1wiICBcIk9FQ0RfaW5zaXRpdHV0aW9uc180XCIgIFwiT0VDRF9pbnNpdGl0dXRpb25zXzVcIiAgXCJPRUNEX2luc2l0aXR1dGlvbnNfNlwiICBcIkNvcm9uYV9jb25jZXJuc18xXCIgICAgXG4gWzUxXSBcIkNvcm9uYV9jb25jZXJuc18yXCIgICAgIFwiQ29yb25hX2NvbmNlcm5zXzNcIiAgICAgXCJDb3JvbmFfY29uY2VybnNfNFwiICAgICBcIkNvcm9uYV9jb25jZXJuc181XCIgICAgIFwiVHJ1c3RfY291bnRyeW1lYXN1cmVcIiBcbiBbNTZdIFwiQ29tcGxpYW5jZV8xXCIgICAgICAgICAgXCJDb21wbGlhbmNlXzJcIiAgICAgICAgICBcIkNvbXBsaWFuY2VfM1wiICAgICAgICAgIFwiQ29tcGxpYW5jZV80XCIgICAgICAgICAgXCJDb21wbGlhbmNlXzVcIiAgICAgICAgIFxuIFs2MV0gXCJDb21wbGlhbmNlXzZcIiAgICAgICAgICBcIkJGRl8xNV8xXCIgICAgICAgICAgICAgIFwiQkZGXzE1XzJcIiAgICAgICAgICAgICAgXCJCRkZfMTVfM1wiICAgICAgICAgICAgICBcIkJGRl8xNV80XCIgICAgICAgICAgICAgXG4gWzY2XSBcIkJGRl8xNV81XCIgICAgICAgICAgICAgIFwiQkZGXzE1XzZcIiAgICAgICAgICAgICAgXCJCRkZfMTVfN1wiICAgICAgICAgICAgICBcIkJGRl8xNV84XCIgICAgICAgICAgICAgIFwiQkZGXzE1XzlcIiAgICAgICAgICAgICBcbiBbNzFdIFwiQkZGXzE1XzEwXCIgICAgICAgICAgICAgXCJCRkZfMTVfMTFcIiAgICAgICAgICAgICBcIkJGRl8xNV8xMlwiICAgICAgICAgICAgIFwiQkZGXzE1XzEzXCIgICAgICAgICAgICAgXCJCRkZfMTVfMTRcIiAgICAgICAgICAgIFxuIFs3Nl0gXCJCRkZfMTVfMTVcIiAgICAgICAgICAgICBcIkV4cGxfRGlzdHJlc3NfMVwiICAgICAgIFwiRXhwbF9EaXN0cmVzc18yXCIgICAgICAgXCJFeHBsX0Rpc3RyZXNzXzNcIiAgICAgICBcIkV4cGxfRGlzdHJlc3NfNFwiICAgICAgXG4gWzgxXSBcIkV4cGxfRGlzdHJlc3NfNVwiICAgICAgIFwiRXhwbF9EaXN0cmVzc182XCIgICAgICAgXCJFeHBsX0Rpc3RyZXNzXzdcIiAgICAgICBcIkV4cGxfRGlzdHJlc3NfOFwiICAgICAgIFwiRXhwbF9EaXN0cmVzc185XCIgICAgICBcbiBbODZdIFwiRXhwbF9EaXN0cmVzc18xMFwiICAgICAgXCJFeHBsX0Rpc3RyZXNzXzExXCIgICAgICBcIkV4cGxfRGlzdHJlc3NfMTJcIiAgICAgIFwiRXhwbF9EaXN0cmVzc18xM1wiICAgICAgXCJFeHBsX0Rpc3RyZXNzXzE0XCIgICAgIFxuIFs5MV0gXCJFeHBsX0Rpc3RyZXNzXzE1XCIgICAgICBcIkV4cGxfRGlzdHJlc3NfMTZcIiAgICAgIFwiRXhwbF9EaXN0cmVzc18xN1wiICAgICAgXCJFeHBsX0Rpc3RyZXNzXzE4XCIgICAgICBcIkV4cGxfRGlzdHJlc3NfMTlcIiAgICAgXG4gWzk2XSBcIkV4cGxfRGlzdHJlc3NfMjBcIiAgICAgIFwiRXhwbF9EaXN0cmVzc18yMVwiICAgICAgXCJFeHBsX0Rpc3RyZXNzXzIyXCIgICAgICBcIkV4cGxfRGlzdHJlc3NfMjNcIiAgICAgIFwiRXhwbF9EaXN0cmVzc18yNFwiICAgICBcblsxMDFdIFwiRXhwbF9EaXN0cmVzc190eHRcIiAgICAgXCJTUFNfMVwiICAgICAgICAgICAgICAgICBcIlNQU18yXCIgICAgICAgICAgICAgICAgIFwiU1BTXzNcIiAgICAgICAgICAgICAgICAgXCJTUFNfNFwiICAgICAgICAgICAgICAgIFxuWzEwNl0gXCJTUFNfNVwiICAgICAgICAgICAgICAgICBcIlNQU182XCIgICAgICAgICAgICAgICAgIFwiU1BTXzdcIiAgICAgICAgICAgICAgICAgXCJTUFNfOFwiICAgICAgICAgICAgICAgICBcIlNQU185XCIgICAgICAgICAgICAgICAgXG5bMTExXSBcIlNQU18xMFwiICAgICAgICAgICAgICAgIFwiRXhwbF9Db3BpbmdfMVwiICAgICAgICAgXCJFeHBsX0NvcGluZ18yXCIgICAgICAgICBcIkV4cGxfQ29waW5nXzNcIiAgICAgICAgIFwiRXhwbF9Db3BpbmdfNFwiICAgICAgICBcblsxMTZdIFwiRXhwbF9Db3BpbmdfNVwiICAgICAgICAgXCJFeHBsX0NvcGluZ182XCIgICAgICAgICBcIkV4cGxfQ29waW5nXzdcIiAgICAgICAgIFwiRXhwbF9Db3BpbmdfOFwiICAgICAgICAgXCJFeHBsX0NvcGluZ185XCIgICAgICAgIFxuWzEyMV0gXCJFeHBsX0NvcGluZ18xMFwiICAgICAgICBcIkV4cGxfQ29waW5nXzExXCIgICAgICAgIFwiRXhwbF9Db3BpbmdfMTJcIiAgICAgICAgXCJFeHBsX0NvcGluZ18xM1wiICAgICAgICBcIkV4cGxfQ29waW5nXzE0XCIgICAgICAgXG5bMTI2XSBcIkV4cGxfQ29waW5nXzE1XCIgICAgICAgIFwiRXhwbF9Db3BpbmdfMTZcIiAgICAgICAgXCJFeHBsX2NvcGluZ190eHRcIiAgICAgICBcIkV4cGxfbWVkaWFfMVwiICAgICAgICAgIFwiRXhwbF9tZWRpYV8yXCIgICAgICAgICBcblsxMzFdIFwiRXhwbF9tZWRpYV8zXCIgICAgICAgICAgXCJFeHBsX21lZGlhXzRcIiAgICAgICAgICBcIkV4cGxfbWVkaWFfNVwiICAgICAgICAgIFwiRXhwbF9tZWRpYV82XCIgICAgICAgICAgXCJGaW5hbF9vcGVuXCIgICAgICAgICAgIFxuIn0= -->
-<pre><code>  [1] &quot;StartDate&quot;             &quot;EndDate&quot;               &quot;Status&quot;                &quot;Progress&quot;              &quot;Duration (in seconds)&quot;
-  [6] &quot;Finished&quot;              &quot;RecordedDate&quot;          &quot;ResponseId&quot;            &quot;DistributionChannel&quot;   &quot;UserLanguage&quot;         
- [11] &quot;Consent&quot;               &quot;Dem_age&quot;               &quot;Dem_gender&quot;            &quot;Dem_edu&quot;               &quot;Dem_edu_mom&quot;          
- [16] &quot;Dem_employment&quot;        &quot;Country&quot;               &quot;Dem_Expat&quot;             &quot;Dem_state&quot;             &quot;Dem_maritalstatus&quot;    
- [21] &quot;Dem_dependents&quot;        &quot;Dem_riskgroup&quot;         &quot;Dem_islolation&quot;        &quot;Dem_isolation_adults&quot;  &quot;Dem_isolation_kids&quot;   
- [26] &quot;AD_gain&quot;               &quot;AD_loss&quot;               &quot;AD_check&quot;              &quot;Scale_PSS10_UCLA_1&quot;    &quot;Scale_PSS10_UCLA_2&quot;   
- [31] &quot;Scale_PSS10_UCLA_3&quot;    &quot;Scale_PSS10_UCLA_4&quot;    &quot;Scale_PSS10_UCLA_5&quot;    &quot;Scale_PSS10_UCLA_6&quot;    &quot;Scale_PSS10_UCLA_7&quot;   
- [36] &quot;Scale_PSS10_UCLA_8&quot;    &quot;Scale_PSS10_UCLA_9&quot;    &quot;Scale_PSS10_UCLA_10&quot;   &quot;Scale_PSS10_UCLA_11&quot;   &quot;Scale_PSS10_UCLA_12&quot;  
- [41] &quot;Scale_PSS10_UCLA_13&quot;   &quot;OECD_people_1&quot;         &quot;OECD_people_2&quot;         &quot;OECD_insititutions_1&quot;  &quot;OECD_insititutions_2&quot; 
- [46] &quot;OECD_insititutions_3&quot;  &quot;OECD_insititutions_4&quot;  &quot;OECD_insititutions_5&quot;  &quot;OECD_insititutions_6&quot;  &quot;Corona_concerns_1&quot;    
- [51] &quot;Corona_concerns_2&quot;     &quot;Corona_concerns_3&quot;     &quot;Corona_concerns_4&quot;     &quot;Corona_concerns_5&quot;     &quot;Trust_countrymeasure&quot; 
- [56] &quot;Compliance_1&quot;          &quot;Compliance_2&quot;          &quot;Compliance_3&quot;          &quot;Compliance_4&quot;          &quot;Compliance_5&quot;         
- [61] &quot;Compliance_6&quot;          &quot;BFF_15_1&quot;              &quot;BFF_15_2&quot;              &quot;BFF_15_3&quot;              &quot;BFF_15_4&quot;             
- [66] &quot;BFF_15_5&quot;              &quot;BFF_15_6&quot;              &quot;BFF_15_7&quot;              &quot;BFF_15_8&quot;              &quot;BFF_15_9&quot;             
- [71] &quot;BFF_15_10&quot;             &quot;BFF_15_11&quot;             &quot;BFF_15_12&quot;             &quot;BFF_15_13&quot;             &quot;BFF_15_14&quot;            
- [76] &quot;BFF_15_15&quot;             &quot;Expl_Distress_1&quot;       &quot;Expl_Distress_2&quot;       &quot;Expl_Distress_3&quot;       &quot;Expl_Distress_4&quot;      
- [81] &quot;Expl_Distress_5&quot;       &quot;Expl_Distress_6&quot;       &quot;Expl_Distress_7&quot;       &quot;Expl_Distress_8&quot;       &quot;Expl_Distress_9&quot;      
- [86] &quot;Expl_Distress_10&quot;      &quot;Expl_Distress_11&quot;      &quot;Expl_Distress_12&quot;      &quot;Expl_Distress_13&quot;      &quot;Expl_Distress_14&quot;     
- [91] &quot;Expl_Distress_15&quot;      &quot;Expl_Distress_16&quot;      &quot;Expl_Distress_17&quot;      &quot;Expl_Distress_18&quot;      &quot;Expl_Distress_19&quot;     
- [96] &quot;Expl_Distress_20&quot;      &quot;Expl_Distress_21&quot;      &quot;Expl_Distress_22&quot;      &quot;Expl_Distress_23&quot;      &quot;Expl_Distress_24&quot;     
-[101] &quot;Expl_Distress_txt&quot;     &quot;SPS_1&quot;                 &quot;SPS_2&quot;                 &quot;SPS_3&quot;                 &quot;SPS_4&quot;                
-[106] &quot;SPS_5&quot;                 &quot;SPS_6&quot;                 &quot;SPS_7&quot;                 &quot;SPS_8&quot;                 &quot;SPS_9&quot;                
-[111] &quot;SPS_10&quot;                &quot;Expl_Coping_1&quot;         &quot;Expl_Coping_2&quot;         &quot;Expl_Coping_3&quot;         &quot;Expl_Coping_4&quot;        
-[116] &quot;Expl_Coping_5&quot;         &quot;Expl_Coping_6&quot;         &quot;Expl_Coping_7&quot;         &quot;Expl_Coping_8&quot;         &quot;Expl_Coping_9&quot;        
-[121] &quot;Expl_Coping_10&quot;        &quot;Expl_Coping_11&quot;        &quot;Expl_Coping_12&quot;        &quot;Expl_Coping_13&quot;        &quot;Expl_Coping_14&quot;       
-[126] &quot;Expl_Coping_15&quot;        &quot;Expl_Coping_16&quot;        &quot;Expl_coping_txt&quot;       &quot;Expl_media_1&quot;          &quot;Expl_media_2&quot;         
-[131] &quot;Expl_media_3&quot;          &quot;Expl_media_4&quot;          &quot;Expl_media_5&quot;          &quot;Expl_media_6&quot;          &quot;Final_open&quot;           </code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-</div>
-</div>
-<div id="create-composit-scores" class="section level1">
-<h1>Create composit scores</h1>
-<div id="pss10" class="section level2">
-<h2>PSS10</h2>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuUFNTMTBzZXQgPC0gZFssIGdyZXAoXCJQU1MxMFwiLCBuYW1lcyhkKSldXG5QU1MxMGxpc3QgPC0gbGlzdChQU1MxMF9hdmcgPSBjKDE6MywgLTQsIC01LCA2LCAtNywgLTgsIDk6MTMpKSBcblBTUzEwc2NvcmUgPC0gc2NvcmVUZXN0KFBTUzEwc2V0LCBQU1MxMGxpc3QsIG5vbWlzcyA9IDAuMDEsIHJlbCA9IEYpXG5gYGAifQ== -->
-<pre class="r"><code>PSS10set &lt;- d[, grep(&quot;PSS10&quot;, names(d))]
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxubmFtZXMoZClcbmBgYFxuYGBgIn0= -->
+<pre class="r"><code>```r
+names(d)</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-output-begin eyJkYXRhIjoiICBbMV0gXFxTdGFydERhdGVcXCAgICAgICAgICAgICBcXEVuZERhdGVcXCAgICAgICAgICAgICAgIFxcU3RhdHVzXFwgICAgICAgICAgICAgICAgXFxQcm9ncmVzc1xcICAgICAgICAgICAgICBcXER1cmF0aW9uIChpbiBzZWNvbmRzKVxcXG4gIFs2XSBcXEZpbmlzaGVkXFwgICAgICAgICAgICAgIFxcUmVjb3JkZWREYXRlXFwgICAgICAgICAgXFxSZXNwb25zZUlkXFwgICAgICAgICAgICBcXERpc3RyaWJ1dGlvbkNoYW5uZWxcXCAgIFxcVXNlckxhbmd1YWdlXFwgICAgICAgICBcbiBbMTFdIFxcQ29uc2VudFxcICAgICAgICAgICAgICAgXFxEZW1fYWdlXFwgICAgICAgICAgICAgICBcXERlbV9nZW5kZXJcXCAgICAgICAgICAgIFxcRGVtX2VkdVxcICAgICAgICAgICAgICAgXFxEZW1fZWR1X21vbVxcICAgICAgICAgIFxuIFsxNl0gXFxEZW1fZW1wbG95bWVudFxcICAgICAgICBcXENvdW50cnlcXCAgICAgICAgICAgICAgIFxcRGVtX0V4cGF0XFwgICAgICAgICAgICAgXFxEZW1fc3RhdGVcXCAgICAgICAgICAgICBcXERlbV9tYXJpdGFsc3RhdHVzXFwgICAgXG4gWzIxXSBcXERlbV9kZXBlbmRlbnRzXFwgICAgICAgIFxcRGVtX3Jpc2tncm91cFxcICAgICAgICAgXFxEZW1faXNsb2xhdGlvblxcICAgICAgICBcXERlbV9pc29sYXRpb25fYWR1bHRzXFwgIFxcRGVtX2lzb2xhdGlvbl9raWRzXFwgICBcbiBbMjZdIFxcQURfZ2FpblxcICAgICAgICAgICAgICAgXFxBRF9sb3NzXFwgICAgICAgICAgICAgICBcXEFEX2NoZWNrXFwgICAgICAgICAgICAgIFxcU2NhbGVfUFNTMTBfVUNMQV8xXFwgICAgXFxTY2FsZV9QU1MxMF9VQ0xBXzJcXCAgIFxuIFszMV0gXFxTY2FsZV9QU1MxMF9VQ0xBXzNcXCAgICBcXFNjYWxlX1BTUzEwX1VDTEFfNFxcICAgIFxcU2NhbGVfUFNTMTBfVUNMQV81XFwgICAgXFxTY2FsZV9QU1MxMF9VQ0xBXzZcXCAgICBcXFNjYWxlX1BTUzEwX1VDTEFfN1xcICAgXG4gWzM2XSBcXFNjYWxlX1BTUzEwX1VDTEFfOFxcICAgIFxcU2NhbGVfUFNTMTBfVUNMQV85XFwgICAgXFxTY2FsZV9QU1MxMF9VQ0xBXzEwXFwgICBcXFNjYWxlX1BTUzEwX1VDTEFfMTFcXCAgIFxcU2NhbGVfUFNTMTBfVUNMQV8xMlxcICBcbiBbNDFdIFxcU2NhbGVfUFNTMTBfVUNMQV8xM1xcICAgXFxPRUNEX3Blb3BsZV8xXFwgICAgICAgICBcXE9FQ0RfcGVvcGxlXzJcXCAgICAgICAgIFxcT0VDRF9pbnNpdGl0dXRpb25zXzFcXCAgXFxPRUNEX2luc2l0aXR1dGlvbnNfMlxcIFxuIFs0Nl0gXFxPRUNEX2luc2l0aXR1dGlvbnNfM1xcICBcXE9FQ0RfaW5zaXRpdHV0aW9uc180XFwgIFxcT0VDRF9pbnNpdGl0dXRpb25zXzVcXCAgXFxPRUNEX2luc2l0aXR1dGlvbnNfNlxcICBcXENvcm9uYV9jb25jZXJuc18xXFwgICAgXG4gWzUxXSBcXENvcm9uYV9jb25jZXJuc18yXFwgICAgIFxcQ29yb25hX2NvbmNlcm5zXzNcXCAgICAgXFxDb3JvbmFfY29uY2VybnNfNFxcICAgICBcXENvcm9uYV9jb25jZXJuc181XFwgICAgIFxcVHJ1c3RfY291bnRyeW1lYXN1cmVcXCBcbiBbNTZdIFxcQ29tcGxpYW5jZV8xXFwgICAgICAgICAgXFxDb21wbGlhbmNlXzJcXCAgICAgICAgICBcXENvbXBsaWFuY2VfM1xcICAgICAgICAgIFxcQ29tcGxpYW5jZV80XFwgICAgICAgICAgXFxDb21wbGlhbmNlXzVcXCAgICAgICAgIFxuIFs2MV0gXFxDb21wbGlhbmNlXzZcXCAgICAgICAgICBcXEJGRl8xNV8xXFwgICAgICAgICAgICAgIFxcQkZGXzE1XzJcXCAgICAgICAgICAgICAgXFxCRkZfMTVfM1xcICAgICAgICAgICAgICBcXEJGRl8xNV80XFwgICAgICAgICAgICAgXG4gWzY2XSBcXEJGRl8xNV81XFwgICAgICAgICAgICAgIFxcQkZGXzE1XzZcXCAgICAgICAgICAgICAgXFxCRkZfMTVfN1xcICAgICAgICAgICAgICBcXEJGRl8xNV84XFwgICAgICAgICAgICAgIFxcQkZGXzE1XzlcXCAgICAgICAgICAgICBcbiBbNzFdIFxcQkZGXzE1XzEwXFwgICAgICAgICAgICAgXFxCRkZfMTVfMTFcXCAgICAgICAgICAgICBcXEJGRl8xNV8xMlxcICAgICAgICAgICAgIFxcQkZGXzE1XzEzXFwgICAgICAgICAgICAgXFxCRkZfMTVfMTRcXCAgICAgICAgICAgIFxuIFs3Nl0gXFxCRkZfMTVfMTVcXCAgICAgICAgICAgICBcXEV4cGxfRGlzdHJlc3NfMVxcICAgICAgIFxcRXhwbF9EaXN0cmVzc18yXFwgICAgICAgXFxFeHBsX0Rpc3RyZXNzXzNcXCAgICAgICBcXEV4cGxfRGlzdHJlc3NfNFxcICAgICAgXG4gWzgxXSBcXEV4cGxfRGlzdHJlc3NfNVxcICAgICAgIFxcRXhwbF9EaXN0cmVzc182XFwgICAgICAgXFxFeHBsX0Rpc3RyZXNzXzdcXCAgICAgICBcXEV4cGxfRGlzdHJlc3NfOFxcICAgICAgIFxcRXhwbF9EaXN0cmVzc185XFwgICAgICBcbiBbODZdIFxcRXhwbF9EaXN0cmVzc18xMFxcICAgICAgXFxFeHBsX0Rpc3RyZXNzXzExXFwgICAgICBcXEV4cGxfRGlzdHJlc3NfMTJcXCAgICAgIFxcRXhwbF9EaXN0cmVzc18xM1xcICAgICAgXFxFeHBsX0Rpc3RyZXNzXzE0XFwgICAgIFxuIFs5MV0gXFxFeHBsX0Rpc3RyZXNzXzE1XFwgICAgICBcXEV4cGxfRGlzdHJlc3NfMTZcXCAgICAgIFxcRXhwbF9EaXN0cmVzc18xN1xcICAgICAgXFxFeHBsX0Rpc3RyZXNzXzE4XFwgICAgICBcXEV4cGxfRGlzdHJlc3NfMTlcXCAgICAgXG4gWzk2XSBcXEV4cGxfRGlzdHJlc3NfMjBcXCAgICAgIFxcRXhwbF9EaXN0cmVzc18yMVxcICAgICAgXFxFeHBsX0Rpc3RyZXNzXzIyXFwgICAgICBcXEV4cGxfRGlzdHJlc3NfMjNcXCAgICAgIFxcRXhwbF9EaXN0cmVzc18yNFxcICAgICBcblsxMDFdIFxcRXhwbF9EaXN0cmVzc190eHRcXCAgICAgXFxTUFNfMVxcICAgICAgICAgICAgICAgICBcXFNQU18yXFwgICAgICAgICAgICAgICAgIFxcU1BTXzNcXCAgICAgICAgICAgICAgICAgXFxTUFNfNFxcICAgICAgICAgICAgICAgIFxuWzEwNl0gXFxTUFNfNVxcICAgICAgICAgICAgICAgICBcXFNQU182XFwgICAgICAgICAgICAgICAgIFxcU1BTXzdcXCAgICAgICAgICAgICAgICAgXFxTUFNfOFxcICAgICAgICAgICAgICAgICBcXFNQU185XFwgICAgICAgICAgICAgICAgXG5bMTExXSBcXFNQU18xMFxcICAgICAgICAgICAgICAgIFxcRXhwbF9Db3BpbmdfMVxcICAgICAgICAgXFxFeHBsX0NvcGluZ18yXFwgICAgICAgICBcXEV4cGxfQ29waW5nXzNcXCAgICAgICAgIFxcRXhwbF9Db3BpbmdfNFxcICAgICAgICBcblsxMTZdIFxcRXhwbF9Db3BpbmdfNVxcICAgICAgICAgXFxFeHBsX0NvcGluZ182XFwgICAgICAgICBcXEV4cGxfQ29waW5nXzdcXCAgICAgICAgIFxcRXhwbF9Db3BpbmdfOFxcICAgICAgICAgXFxFeHBsX0NvcGluZ185XFwgICAgICAgIFxuWzEyMV0gXFxFeHBsX0NvcGluZ18xMFxcICAgICAgICBcXEV4cGxfQ29waW5nXzExXFwgICAgICAgIFxcRXhwbF9Db3BpbmdfMTJcXCAgICAgICAgXFxFeHBsX0NvcGluZ18xM1xcICAgICAgICBcXEV4cGxfQ29waW5nXzE0XFwgICAgICAgXG5bMTI2XSBcXEV4cGxfQ29waW5nXzE1XFwgICAgICAgIFxcRXhwbF9Db3BpbmdfMTZcXCAgICAgICAgXFxFeHBsX2NvcGluZ190eHRcXCAgICAgICBcXEV4cGxfbWVkaWFfMVxcICAgICAgICAgIFxcRXhwbF9tZWRpYV8yXFwgICAgICAgICBcblsxMzFdIFxcRXhwbF9tZWRpYV8zXFwgICAgICAgICAgXFxFeHBsX21lZGlhXzRcXCAgICAgICAgICBcXEV4cGxfbWVkaWFfNVxcICAgICAgICAgIFxcRXhwbF9tZWRpYV82XFwgICAgICAgICAgXFxGaW5hbF9vcGVuXFwgICAgICAgICAgIFxuIn0= --&gt;
+</code></pre>
+<p>[1]         (in seconds)<br />
+[6]          <br />
+[11]   _age  _gender  _edu  _edu_mom <br />
+[16] _employment    _Expat  _state  _maritalstatus <br />
+[21] _dependents  _riskgroup  _islolation  _isolation_adults  _isolation_kids <br />
+[26] _gain  _loss  _check  _PSS10_UCLA_1  _PSS10_UCLA_2 <br />
+[31] _PSS10_UCLA_3  _PSS10_UCLA_4  _PSS10_UCLA_5  _PSS10_UCLA_6  _PSS10_UCLA_7 <br />
+[36] _PSS10_UCLA_8  _PSS10_UCLA_9  _PSS10_UCLA_10  _PSS10_UCLA_11  _PSS10_UCLA_12  [41] _PSS10_UCLA_13  _people_1  _people_2  _insititutions_1  _insititutions_2  [46] _insititutions_3  _insititutions_4  _insititutions_5  _insititutions_6  _concerns_1 <br />
+[51] _concerns_2  _concerns_3  _concerns_4  _concerns_5  _countrymeasure  [56] _1  _2  _3  _4  _5 <br />
+[61] _6  _15_1  _15_2  _15_3  _15_4 <br />
+[66] _15_5  _15_6  _15_7  _15_8  _15_9 <br />
+[71] _15_10  _15_11  _15_12  _15_13  _15_14 <br />
+[76] _15_15  _Distress_1  _Distress_2  _Distress_3  _Distress_4 <br />
+[81] _Distress_5  _Distress_6  _Distress_7  _Distress_8  _Distress_9 <br />
+[86] _Distress_10  _Distress_11  _Distress_12  _Distress_13  _Distress_14 <br />
+[91] _Distress_15  _Distress_16  _Distress_17  _Distress_18  _Distress_19 <br />
+[96] _Distress_20  _Distress_21  _Distress_22  _Distress_23  _Distress_24 <br />
+[101] _Distress_txt  _1  _2  _3  _4 <br />
+[106] _5  _6  _7  _8  _9 <br />
+[111] _10  _Coping_1  _Coping_2  _Coping_3  _Coping_4 <br />
+[116] _Coping_5  _Coping_6  _Coping_7  _Coping_8  _Coping_9 <br />
+[121] _Coping_10  _Coping_11  _Coping_12  _Coping_13  _Coping_14 <br />
+[126] _Coping_15  _Coping_16  _coping_txt  _media_1  _media_2 <br />
+[131] _media_3  _media_4  _media_5  _media_6  _open </p>
+<pre><code>
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+# Create composit scores 
+## PSS10
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuUFNTMTBzZXQgPC0gZFssIGdyZXAoXFxQU1MxMFxcLCBuYW1lcyhkKSldXG5QU1MxMGxpc3QgPC0gbGlzdChQU1MxMF9hdmcgPSBjKDE6MywgLTQsIC01LCA2LCAtNywgLTgsIDk6MTMpKSBcblBTUzEwc2NvcmUgPC0gc2NvcmVUZXN0KFBTUzEwc2V0LCBQU1MxMGxpc3QsIG5vbWlzcyA9IDAuMDEsIHJlbCA9IEYpXG5gYGBcbmBgYCJ9 --&gt;
+
+```r
+```r
+PSS10set &lt;- d[, grep(\PSS10\, names(d))]
 PSS10list &lt;- list(PSS10_avg = c(1:3, -4, -5, 6, -7, -8, 9:13)) 
 PSS10score &lt;- scoreTest(PSS10set, PSS10list, nomiss = 0.01, rel = F)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3IgaW4gRlVOKFhbW2ldXSwgLi4uKSA6IFxuICBvbmx5IGRlZmluZWQgb24gYSBkYXRhIGZyYW1lIHdpdGggYWxsIG51bWVyaWMgdmFyaWFibGVzXG4ifQ== -->
-<pre><code>Error in FUN(X[[i]], ...) : 
-  only defined on a data frame with all numeric variables</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuI3JlbGlhYmlsaXR5IG9mIHRoZSBzY2FsZVxuYWxwaGEoUFNTMTBzZXQsIGtleXMgPSBjKFxcU2NhbGVfUFNTMTBfVUNMQV80XFwsXG4gICAgICAgICAgICAgICAgICAgICAgICAgXFxTY2FsZV9QU1MxMF9VQ0xBXzVcXCxcbiAgICAgICAgICAgICAgICAgICAgICAgICBcXFNjYWxlX1BTUzEwX1VDTEFfN1xcLFxuICAgICAgICAgICAgICAgICAgICAgICAgIFxcU2NhbGVfUFNTMTBfVUNMQV84XFwpKVxuYGBgXG5gYGAifQ== -->
-<pre class="r"><code>```r
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-output-begin eyJkYXRhIjoiRXJyb3IgaW4gRlVOKFhbW2ldXSwgLi4uKSA6IFxuICBvbmx5IGRlZmluZWQgb24gYSBkYXRhIGZyYW1lIHdpdGggYWxsIG51bWVyaWMgdmFyaWFibGVzXG4ifQ== --&gt;
+</code></pre>
+<p>Error in FUN(X[[i]], …) : only defined on a data frame with all numeric variables</p>
+<pre><code>
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuYGBgclxuI3JlbGlhYmlsaXR5IG9mIHRoZSBzY2FsZVxuYWxwaGEoUFNTMTBzZXQsIGtleXMgPSBjKFxcU2NhbGVfUFNTMTBfVUNMQV80XFwsXG4gICAgICAgICAgICAgICAgICAgICAgICAgXFxTY2FsZV9QU1MxMF9VQ0xBXzVcXCxcbiAgICAgICAgICAgICAgICAgICAgICAgICBcXFNjYWxlX1BTUzEwX1VDTEFfN1xcLFxuICAgICAgICAgICAgICAgICAgICAgICAgIFxcU2NhbGVfUFNTMTBfVUNMQV84XFwpKVxuYGBgXG5gYGBcbmBgYCJ9 --&gt;
+
+```r
+```r
+```r
 #reliability of the scale
 alpha(PSS10set, keys = c(\Scale_PSS10_UCLA_4\,
                          \Scale_PSS10_UCLA_5\,
                          \Scale_PSS10_UCLA_7\,
                          \Scale_PSS10_UCLA_8\))</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
-
-&lt;!-- rnb-chunk-end --&gt;
-
-
-&lt;!-- rnb-text-begin --&gt;
-
-
-## Compliance
-
-&lt;!-- rnb-text-end --&gt;
-
-
-&lt;!-- rnb-chunk-begin --&gt;
-
-
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuQ29tcHNldCA8LSBkWywgZ3JlcChcIkNvbXBsaWFuY2VcIiwgbmFtZXMoZCkpXVxuY29tcGxpc3QgPC0gbGlzdChDb21wbGlhbmNlX2F2ZyA9IGMoMTozLCAtNCwgNSwgLTYpKSAjTm90IHN1cmUgaWYgYnV5aW5nIGxhcmdlIGdyb2NlcmllcyBpcyBhZ2FpbnN0IHRoZSByZWNvbW1lbmRhdGlvbnMsIEknZCBzYXkgeWVzP1xuQ29tcHNjb3JlIDwtIHNjb3JlVGVzdChDb21wc2V0LCBDb21wbGlzdCwgbm9taXNzID0gMC4wMSwgcmVsID0gRilcbmBgYCJ9 --&gt;
-
-```r
-Compset &lt;- d[, grep(&quot;Compliance&quot;, names(d))]
-complist &lt;- list(Compliance_avg = c(1:3, -4, 5, -6)) #Not sure if buying large groceries is against the recommendations, I&#39;d say yes?
-Compscore &lt;- scoreTest(Compset, Complist, nomiss = 0.01, rel = F)</code></pre>
+<pre><code></code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-output-begin eyJkYXRhIjoiRXJyb3IgaW4gRlVOKFhbW2ldXSwgLi4uKSA6IFxuICBvbmx5IGRlZmluZWQgb24gYSBkYXRhIGZyYW1lIHdpdGggYWxsIG51bWVyaWMgdmFyaWFibGVzXG4ifQ== -->
 <pre><code>Error in FUN(X[[i]], ...) : 
@@ -3173,40 +3200,18 @@ Compscore &lt;- scoreTest(Compset, Complist, nomiss = 0.01, rel = F)</code></pre
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
+</div>
+<div id="compliance" class="section level2">
+<h2>Compliance</h2>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuI3JlbGlhYmlsaXR5IG9mIHRoZSBzY2FsZVxuYWxwaGEoQ29tcHNldCwga2V5cyA9IGMoXFxDb21wbGlhbmNlXzRcXCxcbiAgICAgICAgICAgICAgICAgICAgICAgIFxcQ29tcGxpYW5jZV82XFwpKVxuYGBgXG5gYGAifQ== -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuYGBgclxuI3JlbGlhYmlsaXR5IG9mIHRoZSBzY2FsZVxuYWxwaGEoQ29tcHNldCwga2V5cyA9IGMoXFxDb21wbGlhbmNlXzRcXCxcbiAgICAgICAgICAgICAgICAgICAgICAgIFxcQ29tcGxpYW5jZV82XFwpKVxuYGBgXG5gYGBcbmBgYCJ9 -->
 <pre class="r"><code>```r
+```r
 #reliability of the scale
 alpha(Compset, keys = c(\Compliance_4\,
                         \Compliance_6\))</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
-
-&lt;!-- rnb-chunk-end --&gt;
-
-
-&lt;!-- rnb-text-begin --&gt;
-
-
-## BFF_15
-
-&lt;!-- rnb-text-end --&gt;
-
-
-&lt;!-- rnb-chunk-begin --&gt;
-
-
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuQkZGMTVzZXQgPC0gZFssIGdyZXAoXCJCRkZfMTVcIiwgbmFtZXMoZCkpXVxuQkZGMTVsaXN0IDwtIGxpc3QobmV1ID0gYygxLCAyLCAtMyksIFxuICAgICAgICAgICAgICAgICAgZXh0ID0gYyg0LCA1LCAtNiksXG4gICAgICAgICAgICAgICAgICBvcGUgPSBjKDcsIDgsIDkpLFxuICAgICAgICAgICAgICAgICAgYWdyID0gYygxMCwgMTEsIC0xMiksXG4gICAgICAgICAgICAgICAgICBjb24gPSBjKDEzLCAtMTQsIDE1KSkgXG5CRkYxNXNjb3JlIDwtIHNjb3JlVGVzdChCRkYxNXNldCwgQkZGMTVsaXN0LCBub21pc3MgPSAwLjAxLCByZWwgPSBGKVxuYGBgIn0= --&gt;
-
-```r
-BFF15set &lt;- d[, grep(&quot;BFF_15&quot;, names(d))]
-BFF15list &lt;- list(neu = c(1, 2, -3), 
-                  ext = c(4, 5, -6),
-                  ope = c(7, 8, 9),
-                  agr = c(10, 11, -12),
-                  con = c(13, -14, 15)) 
-BFF15score &lt;- scoreTest(BFF15set, BFF15list, nomiss = 0.01, rel = F)</code></pre>
+<pre><code></code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-output-begin eyJkYXRhIjoiRXJyb3IgaW4gRlVOKFhbW2ldXSwgLi4uKSA6IFxuICBvbmx5IGRlZmluZWQgb24gYSBkYXRhIGZyYW1lIHdpdGggYWxsIG51bWVyaWMgdmFyaWFibGVzXG4ifQ== -->
 <pre><code>Error in FUN(X[[i]], ...) : 
@@ -3216,37 +3221,16 @@ BFF15score &lt;- scoreTest(BFF15set, BFF15list, nomiss = 0.01, rel = F)</code></
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuI3JlbGlhYmlsaXR5IG9mIHRoZSBzY2FsZVxuYWxwaGEoQkZGMTVzZXRbMTozXSwga2V5cyA9IFxcQkZGXzE1XzNcXClcbmFscGhhKEJGRjE1c2V0WzQ6Nl0sIGtleXMgPSBcXEJGRl8xNV82XFwpXG5hbHBoYShCRkYxNXNldFs3OjldKVxuYWxwaGEoQkZGMTVzZXRbMTA6MTJdLCBrZXlzID0gXFxCRkZfMTVfMTJcXClcbmFscGhhKEJGRjE1c2V0WzEzOjE1XSwga2V5cyA9IFxcQkZGXzE1XzE0XFwpXG5gYGBcbmBgYCJ9 -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuYGBgclxuI3JlbGlhYmlsaXR5IG9mIHRoZSBzY2FsZVxuYWxwaGEoQkZGMTVzZXRbMTozXSwga2V5cyA9IFxcQkZGXzE1XzNcXClcbmFscGhhKEJGRjE1c2V0WzQ6Nl0sIGtleXMgPSBcXEJGRl8xNV82XFwpXG5hbHBoYShCRkYxNXNldFs3OjldKVxuYWxwaGEoQkZGMTVzZXRbMTA6MTJdLCBrZXlzID0gXFxCRkZfMTVfMTJcXClcbmFscGhhKEJGRjE1c2V0WzEzOjE1XSwga2V5cyA9IFxcQkZGXzE1XzE0XFwpXG5gYGBcbmBgYFxuYGBgIn0= -->
 <pre class="r"><code>```r
+```r
 #reliability of the scale
 alpha(BFF15set[1:3], keys = \BFF_15_3\)
 alpha(BFF15set[4:6], keys = \BFF_15_6\)
 alpha(BFF15set[7:9])
 alpha(BFF15set[10:12], keys = \BFF_15_12\)
 alpha(BFF15set[13:15], keys = \BFF_15_14\)</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
-
-&lt;!-- rnb-chunk-end --&gt;
-
-
-&lt;!-- rnb-text-begin --&gt;
-
-
-## SPS10
-
-&lt;!-- rnb-text-end --&gt;
-
-
-&lt;!-- rnb-chunk-begin --&gt;
-
-
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuU1BTMTBzZXQgPC0gZFssIGdyZXAoXCJTUFNcIiwgbmFtZXMoZCkpXVxuU1BTMTBsaXN0IDwtIGxpc3QoU1BTX2F2ZyA9IGMoMTozLCAtNCwgNSwgLTYpKSBcblNQUzEwc2NvcmUgPC0gc2NvcmVUZXN0KFNQUzEwc2V0LCBTUFMxMGxpc3QsIG5vbWlzcyA9IDAuMDEsIHJlbCA9IEYpXG5gYGAifQ== --&gt;
-
-```r
-SPS10set &lt;- d[, grep(&quot;SPS&quot;, names(d))]
-SPS10list &lt;- list(SPS_avg = c(1:3, -4, 5, -6)) 
-SPS10score &lt;- scoreTest(SPS10set, SPS10list, nomiss = 0.01, rel = F)</code></pre>
+<pre><code></code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-output-begin eyJkYXRhIjoiRXJyb3IgaW4gRlVOKFhbW2ldXSwgLi4uKSA6IFxuICBvbmx5IGRlZmluZWQgb24gYSBkYXRhIGZyYW1lIHdpdGggYWxsIG51bWVyaWMgdmFyaWFibGVzXG4ifQ== -->
 <pre><code>Error in FUN(X[[i]], ...) : 
@@ -3254,13 +3238,50 @@ SPS10score &lt;- scoreTest(SPS10set, SPS10list, nomiss = 0.01, rel = F)</code></
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
+</div>
+<div id="bff_15" class="section level2">
+<h2>BFF_15</h2>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuI3JlbGlhYmlsaXR5IG9mIHRoZSBzY2FsZVxuYWxwaGEoU1BTMTBzZXQpXG5gYGBcbmBgYCJ9 -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuYGBgclxuI3JlbGlhYmlsaXR5IG9mIHRoZSBzY2FsZVxuYWxwaGEoU1BTMTBzZXQpXG5gYGBcbmBgYFxuYGBgIn0= -->
 <pre class="r"><code>```r
+```r
 #reliability of the scale
 alpha(SPS10set)</code></pre>
-<p>```</p>
+<pre><code></code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI3JlbGlhYmlsaXR5IG9mIHRoZSBzY2FsZVxuYWxwaGEoQkZGMTVzZXRbMTozXSwga2V5cyA9IFwiQkZGXzE1XzNcIilcbmFscGhhKEJGRjE1c2V0WzQ6Nl0sIGtleXMgPSBcIkJGRl8xNV82XCIpXG5hbHBoYShCRkYxNXNldFs3OjldKVxuYWxwaGEoQkZGMTVzZXRbMTA6MTJdLCBrZXlzID0gXCJCRkZfMTVfMTJcIilcbmFscGhhKEJGRjE1c2V0WzEzOjE1XSwga2V5cyA9IFwiQkZGXzE1XzE0XCIpXG5gYGAifQ== -->
+<pre class="r"><code>#reliability of the scale
+alpha(BFF15set[1:3], keys = &quot;BFF_15_3&quot;)
+alpha(BFF15set[4:6], keys = &quot;BFF_15_6&quot;)
+alpha(BFF15set[7:9])
+alpha(BFF15set[10:12], keys = &quot;BFF_15_12&quot;)
+alpha(BFF15set[13:15], keys = &quot;BFF_15_14&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="sps10" class="section level2">
+<h2>SPS10</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuU1BTMTBzZXQgPC0gZFssIGdyZXAoXCJTUFNcIiwgbmFtZXMoZCkpXVxuU1BTMTBsaXN0IDwtIGxpc3QoU1BTX2F2ZyA9IGMoMTozLCAtNCwgNSwgLTYpKSBcblNQUzEwc2NvcmUgPC0gc2NvcmVUZXN0KFNQUzEwc2V0LCBTUFMxMGxpc3QsIG5vbWlzcyA9IDAuMDEsIHJlbCA9IEYpXG5kIDwtIGRhdGEuZnJhbWUoZCwgU1BTMTBzY29yZSlcbmBgYCJ9 -->
+<pre class="r"><code>SPS10set &lt;- d[, grep(&quot;SPS&quot;, names(d))]
+SPS10list &lt;- list(SPS_avg = c(1:3, -4, 5, -6)) 
+SPS10score &lt;- scoreTest(SPS10set, SPS10list, nomiss = 0.01, rel = F)
+d &lt;- data.frame(d, SPS10score)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI3JlbGlhYmlsaXR5IG9mIHRoZSBzY2FsZVxuYWxwaGEoU1BTMTBzZXQpXG5gYGAifQ== -->
+<pre class="r"><code>#reliability of the scale
+alpha(SPS10set)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
