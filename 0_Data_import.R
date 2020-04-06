@@ -1,6 +1,7 @@
 library(tidyverse)
 library(psych)
 library(ggplot2)
+library(multicon)
 
 # Load dataset
 name <- c("StartDate", "EndDate", "Status", "Progress", "Duration (in seconds)", 
@@ -42,6 +43,15 @@ da <- read_csv("COVIDiSTRESS import April 6 2020 (choice values).csv", col_names
 # View data structure
 glimpse(d)
 
+# Filter participants who want to participate 
+d <- d %>%
+  filter(Consent == "Yes")
+
+
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+# Different checks of the data ###########################################
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
 # Completeness rate is 54% / How many participants displayed the last survey page. 
 sum(d$Finished) / nrow(d)
 
@@ -73,9 +83,6 @@ describe(question_completeness_rate)
 # I'm leaving it for your consideration
 qplot(seq_along(question_completeness_rate),question_completeness_rate) + geom_line()
 
-#I suggest to filter particpants who disagreed to participate 
-d <- d %>%
-  filter(Consent == "Yes")
 
 # On Dem_edu and Dem_edu_mom variable - we have answer "1"? That's strange. => I am not sure what to to with these values
 unique(d$Dem_edu)
@@ -86,8 +93,19 @@ unique(d$Dem_islolation)
 unique(d$Dem_maritalstatus)
 
 
+# Number of cases from each country
+d %>% group_by(Country) %>% summarize(n()) %>% print(n=1000)
 
+# Number of participants in each language
+d %>% group_by(UserLanguage) %>% summarize(n()) %>% print(n=1000)
+
+
+
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 # Data recoding ##########################################################
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
 # Dominik: I think we should leave some demographics unrecoded for the sake of visualizations. Maybe turn them to factors
 
 # Recoding edu variables 
@@ -172,8 +190,10 @@ d <- d %>% mutate(
 
 
 
-
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 # Creating composite scores ################################################
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
 
 # 1) PSS10
 PSS10set <- d[, grep("PSS10", names(d))]
@@ -189,11 +209,11 @@ d <- data.frame(d, Compscore)
 
 # 3) BFI
 BFF15set <- d[, grep("BFF_15", names(d))]
-BFF15list <- list(neu = c(1, 2, -3), 
-                  ext = c(4, 5, -6),
-                  ope = c(7, 8, 9),
-                  agr = c(10, 11, -12),
-                  con = c(13, -14, 15)) 
+BFF15list <- list(BFI_n = c(1, 2, -3), 
+                  BFI_e = c(4, 5, -6),
+                  BFI_o = c(7, 8, 9),
+                  BFI_a = c(10, 11, -12),
+                  BFI_c = c(13, -14, 15)) 
 BFF15score <- scoreTest(BFF15set, BFF15list, nomiss = 0.01, rel = F)
 d <- data.frame(d, BFF15score)
 
