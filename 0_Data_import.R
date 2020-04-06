@@ -1,6 +1,6 @@
 library(tidyverse)
 library(psych)
-
+library(ggplot2)
 # Load dataset
 name <- c("StartDate", "EndDate", "Status", "Progress", "Duration (in seconds)", 
           "Finished", "RecordedDate", "ResponseId", "DistributionChannel", 
@@ -41,13 +41,45 @@ da <- read_csv("COVIDiSTRESS import April 6 2020 (choice values).csv", col_names
 # View data structure
 glimpse(d)
 
-# Completeness rate is 54%
+# Completeness rate is 54% / How many participants displayed the last survey page. 
 sum(d$Finished) / nrow(d)
+
+# How many participants who agrred to participate in the study displayed  the last page - 64% (it's really high!)
+d %>%
+  filter(Consent == "Yes") %>%
+  summarise(sum(Finished)/length(Finished))
+
+# What was the average percentege of completeness in the survey for each individual?
+
+participant_completeness_rate <- apply(X = d[,11:135], MARGIN = 1, FUN = function(x){
+  
+  sum(!is.na(x))/length(x)
+})
+
+describe(participant_completeness_rate)
+
+# How many persons answered only 1 question? 
+length(which(participant_completeness_rate < (2/125)))
+
+# What was the averge completeness rate within each question?
+question_completeness_rate <- apply(X = d[,11:135], MARGIN = 2, FUN = function(x){
+  sum(!is.na(x))/length(x)
+})
+
+describe(question_completeness_rate)
+
+# this plot is very crude but we can spot some certain issues with our survey. The general trend is similar to other online surveys however those strange drops need to be examined furhter
+# I'm leaving it for your consideration
+qplot(seq_along(question_completeness_rate),question_completeness_rate) + geom_line()
+
+#I suggest to filter particpants who disagreed to participate 
+d <- d %>%
+  filter(Consent == "Yes")
 
 # On Dem_edu and Dem_edu_mom variable - we have answer "1"? That's strange. => I am not sure what to to with these values
 unique(d$Dem_edu)
 unique(d$Dem_edu_mom)
-unique(d$Dem_isolation)
+unique(d$Dem_islolation)
 
 # Similarly Dem_Marital status has "5" => I am not sure what to to with these values
 unique(d$Dem_maritalstatus)
@@ -151,7 +183,7 @@ d <- data.frame(d, PSS10score)
 # 2) Compliance
 Compset <- d[, grep("Compliance", names(d))]
 complist <- list(Compliance_avg = c(1:3, -4, 5, -6)) #Not sure if buying large groceries is against the recommendations, I'd say yes?
-Compscore <- scoreTest(Compset, Complist, nomiss = 0.01, rel = F)
+Compscore <- scoreTest(Compset, complist, nomiss = 0.01, rel = F)
 d <- data.frame(d, Compscore)
 
 # 3) BFI
