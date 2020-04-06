@@ -137,14 +137,14 @@ d <- d %>% mutate(
 # Recoding AD_gain
 d <- d %>% mutate(
   AD_gain = recode(AD_gain,
-                   "· If Program A is adopted, 200 people will be saved." = "Program A",
-                   "· If Program B is adopted, there is 1/3 probability that 600 people will be saved, and 2/3 probability that no people will be saved" = "Program B")
+                   "Â· If Program A is adopted, 200 people will be saved." = "Program A",
+                   "Â· If Program B is adopted, there is 1/3 probability that 600 people will be saved, and 2/3 probability that no people will be saved" = "Program B")
 )
 
 # Recoding AD_loss
 d <- d %>% mutate(
   AD_loss = recode(AD_loss,
-                   "· If Program C is adopted 400 people will die." = "Program C",
+                   "Â· If Program C is adopted 400 people will die." = "Program C",
                    ". If Program D is adopted there is 1/3 probability that nobody will die, and 2/3 probability that 600 people will die." = "Program D")
 )
 
@@ -222,3 +222,9 @@ SPS10set <- d[, grep("SPS", names(d))]
 SPS10list <- list(SPS_avg = c(1:3, -4, 5, -6)) 
 SPS10score <- scoreTest(SPS10set, SPS10list, nomiss = 0.01, rel = F)
 d <- data.frame(d, SPS10score)
+
+#5) Corona_Concerns
+corCset <- d[, grep("Corona_concerns", names(d))]
+corClist <- list(corC_avg = c(1:5)) 
+corCscore <- scoreTest(corCset, corClist, nomiss = 0.01, rel = F)
+d <- data.frame(d, corCscore)
