@@ -190,6 +190,31 @@ d <- d %>% mutate(
 
 
 
+#recode marital status
+d <- d %>% mutate_at(
+  .vars = vars(contains("Dem_maritalstatus")),
+  .funs = recode, 
+  "Single" = "single", 
+  "Married/cohabiting" = "mar/cohab",
+  "Divorced/widowed" = "div/widow", 
+  "Other or would rather not say" = "other/notSay")
+
+#load function 'recode_if'(Aden-Buie & Gerke, 2018)
+recode_if <- function(x, condition, ...) {
+  if_else(condition, recode(x, ...), x)
+}
+
+#fix differences in scoring between english and other languages 
+d <- d %>%
+  mutate(Dem_maritalstatus = 
+           recode_if(Dem_maritalstatus, UserLanguage != "EN", 
+                     "single" = "other/notSay",
+                     "mar/cohab" = "single",
+                     "div/widow"= "mar/cohab",
+                     "other/notSay" = "div/widow"))
+
+
+
 #$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 # Creating composite scores ################################################
 #$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
