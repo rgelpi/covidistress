@@ -2,7 +2,7 @@ library(tidyverse)
 library(psych)
 library(ggplot2)
 library(multicon)
-library(dplyr)
+
 
 # Load dataset
 name <- c("StartDate", "EndDate", "Status", "Progress", "Duration (in seconds)", 
@@ -82,6 +82,9 @@ describe(question_completeness_rate)
 
 # this plot is very crude but we can spot some certain issues with our survey. The general trend is similar to other online surveys however those strange drops need to be examined furhter
 # I'm leaving it for your consideration
+# Dominik: The first two drops are the experimental questions (half participant got 1 and half got 2)
+# Dominik: The 3rd, 4th and 5th are open ended questions, if I am not mistaken
+
 qplot(seq_along(question_completeness_rate),question_completeness_rate) + geom_line()
 
 
@@ -94,7 +97,8 @@ unique(d$Dem_islolation)
 unique(d$Dem_maritalstatus)
 
 
-# Number of cases from each country
+# Number of cases from each country 
+# Brunei needs to be recoded to Bulgaria!
 d %>% group_by(Country) %>% summarize(n()) %>% print(n=1000)
 
 # Number of participants in each language
@@ -138,15 +142,15 @@ d <- d %>% mutate(
 # Recoding AD_gain
 d <- d %>% mutate(
   AD_gain = recode(AD_gain,
-                   "Â· If Program A is adopted, 200 people will be saved." = "Program A",
-                   "Â· If Program B is adopted, there is 1/3 probability that 600 people will be saved, and 2/3 probability that no people will be saved" = "Program B")
+                   "· If Program A is adopted, 200 people will be saved." = "Program A",
+                   "· If Program B is adopted, there is 1/3 probability that 600 people will be saved, and 2/3 probability that no people will be saved" = "Program B")
 )
 
 # Recoding AD_loss
 d <- d %>% mutate(
   AD_loss = recode(AD_loss,
-                   "Â· If Program C is adopted 400 people will die." = "Program C",
-                   ". If Program D is adopted there is 1/3 probability that nobody will die, and 2/3 probability that 600 people will die." = "Program D")
+                   "· If Program C is adopted 400 people will die." = "Program C",
+                   "· If Program D is adopted there is 1/3 probability that nobody will die, and 2/3 probability that 600 people will die." = "Program D")
 )
 
 
