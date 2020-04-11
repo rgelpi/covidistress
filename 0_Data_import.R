@@ -2,6 +2,7 @@ library(tidyverse)
 library(psych)
 library(ggplot2)
 library(multicon)
+library(expss)
 
 
 # Load dataset
@@ -195,7 +196,7 @@ d <- d %>% mutate(
 
 
 
-#recode marital status
+# Recode marital status
 d <- d %>% mutate_at(
   .vars = vars(contains("Dem_maritalstatus")),
   .funs = recode, 
@@ -204,12 +205,12 @@ d <- d %>% mutate_at(
   "Divorced/widowed" = "div/widow", 
   "Other or would rather not say" = "other/notSay")
 
-#load function 'recode_if'(Aden-Buie & Gerke, 2018)
+# Load function 'recode_if'(Aden-Buie & Gerke, 2018)
 recode_if <- function(x, condition, ...) {
   if_else(condition, recode(x, ...), x)
 }
 
-#fix differences in scoring between english and other languages 
+# Fix differences in scoring between english and other languages 
 d <- d %>%
   mutate(Dem_maritalstatus = 
            recode_if(Dem_maritalstatus, UserLanguage != "EN", 
@@ -285,14 +286,166 @@ df_bar<- data_summary(dsub, varname="PSS10_avg",
 head(df_bar) #check the stats
 
 #plot with basic layout. Customize at will
-ggplot(df_bar, aes(x=Country, y=PSS10_avg, width=.6)) + 
+ggplot(df_bar, aes(x=fct_reorder(Country, PSS10_avg), y=PSS10_avg, width=.6)) + 
   geom_bar(stat="identity", color="black", fill="darkred", position=position_dodge()) +
   geom_errorbar(aes(ymin=PSS10_avg, ymax=PSS10_avg+sd), width=.2, #to obtain also the lower part of the SD bar use <ymin=PSS10_avg-sd>
                  position=position_dodge(.9))+
   ggtitle("Stress Levels G7 Countries (Bars represent the upper limit of the SD)")+
   theme(plot.title = element_text(hjust = 0.5))+
   theme_minimal()+
+  xlab("Country")+
   ylab("Stress")+
   ylim(0,5)
 
 
+
+# Visualization of the distress scale
+
+d %>% summarize_at(.vars = dplyr::vars(matches("Distress_\\d")), .funs = mean, na.rm= T) %>% 
+  pivot_longer(cols = everything(), names_to = "Source", values_to = "Value") %>% 
+  mutate(Source = dplyr::recode(Source,
+         "Expl_Distress_1"="Income",
+         "Expl_Distress_2"="Work",
+         "Expl_Distress_3"="Children's education",
+         "Expl_Distress_4"="Job prospects",
+         "Expl_Distress_5"="Access to necessities (food etc.)",
+         "Expl_Distress_6"="No social activities",
+         "Expl_Distress_7"="No religious activities",
+         "Expl_Distress_8"="Behavior of adults I live with",
+         "Expl_Distress_9"="Behavior of children I live with",
+         "Expl_Distress_10"="National economy",
+         "Expl_Distress_11"="Civil services (police, sanitation...)",
+         "Expl_Distress_12"="Risk of catching coronavirus",
+         "Expl_Distress_13"="Risk of being hospitalized or dying",
+         "Expl_Distress_14"="Worry over friends and relatives who live far away",
+         "Expl_Distress_15"="Adapt work to digital platforms",
+         "Expl_Distress_16"="Adapt to social life on digital platforms",
+         "Expl_Distress_17"="Feeling ashamed for acting differently",
+         "Expl_Distress_18"="Loneliness",
+         "Expl_Distress_19"="Time I spend inside",
+         "Expl_Distress_20"="Time I spend in proximity to others",
+         "Expl_Distress_21"="Not knowing about developments with COVID",
+         "Expl_Distress_22"="Not knowing how to stop COVID",
+         "Expl_Distress_23"="Not knowing how long the measures will last",
+         "Expl_Distress_24"="No travel outside my country")
+  ) %>% 
+  ggplot(aes(x = fct_reorder(Source, Value), y = Value)) + 
+  geom_bar(stat = "identity", position = position_dodge(), color="black", fill="darkred")+
+  coord_flip(ylim = c(1,5))+
+  theme_minimal()+
+  xlab("Source of distress")+
+  ylab("Level of distress")
+
+
+
+
+# Visualization of the coping scale
+
+d %>% summarize_at(.vars = dplyr::vars(matches("Coping_\\d")), .funs = mean, na.rm= T) %>% 
+  pivot_longer(cols = everything(), names_to = "Source", values_to = "Value") %>% 
+  mutate(Source = dplyr::recode(Source,
+                                "Expl_Coping_1"="Information from the government",
+                                "Expl_Coping_2"="Face-to-face interactions friends/family",
+                                "Expl_Coping_3"="Phonecalls/long-range interactions friends/family",
+                                "Expl_Coping_4"="Face-to-face interactions colleagues",
+                                "Expl_Coping_5"="Phonecalls/long-range interactions colleagues",
+                                "Expl_Coping_6"="Social media",
+                                "Expl_Coping_7"="Video games (alone)",
+                                "Expl_Coping_8"="Video games (online)",
+                                "Expl_Coping_9"="Watching TV-shows or movies",
+                                "Expl_Coping_10"="Helping others",
+                                "Expl_Coping_11"="Preparing for the crisis",
+                                "Expl_Coping_12"="Following government's advice",
+                                "Expl_Coping_13"="My work/vocation",
+                                "Expl_Coping_14"="Hobby",
+                                "Expl_Coping_15"="God or Religion",
+                                "Expl_Coping_16"="Knowledge of actions take by government or civil service")) %>% 
+  ggplot(aes(x = fct_reorder(Source, Value), y = Value)) + 
+  geom_bar(stat = "identity", position = position_dodge(), color="black", fill="darkred")+
+  coord_flip(ylim = c(1,5))+
+  theme_minimal()+
+  xlab("Source of coping")+
+  ylab("Level of coping")
+
+
+
+# Visualization of trust
+
+d %>% summarize_at(.vars = dplyr::vars(matches("OECD")), .funs = mean, na.rm= T) %>% 
+  pivot_longer(cols = everything(), names_to = "Source", values_to = "Value") %>% 
+  mutate(Source = dplyr::recode(Source,
+                                "OECD_people_1"="Majority of people",
+                                "OECD_people_2"="Majority of people I know personally",
+                                "OECD_insititutions_1"="Country's Parliament/government",
+                                "OECD_insititutions_2"="Country's Police",
+                                "OECD_insititutions_3"="Country's Civil service",
+                                "OECD_insititutions_4"="Country's Healthcare system",
+                                "OECD_insititutions_5"="WHO",
+                                "OECD_insititutions_6"="Government's measures against COVID")) %>% 
+  ggplot(aes(x = fct_reorder(Source, Value), y = Value)) + 
+  geom_bar(stat = "identity", position = position_dodge(), color="black", fill="darkred")+
+  coord_flip(ylim = c(1,10))+
+  scale_y_continuous(breaks = seq(1,10,1))+
+  theme_minimal()+
+  xlab("Source")+
+  ylab("Level of trust")
+
+
+
+# Visualization of concern
+
+d %>% summarize_at(.vars = dplyr::vars(matches("concern")), .funs = mean, na.rm= T) %>% 
+  pivot_longer(cols = everything(), names_to = "Source", values_to = "Value") %>% 
+  mutate(Source = dplyr::recode(Source,
+                                "Corona_concerns_1"="... me personally",
+                                "Corona_concerns_2"="... my family",
+                                "Corona_concerns_3"="... my close friends",
+                                "Corona_concerns_4"="... my country",
+                                "Corona_concerns_5"="... other countries")) %>% 
+  ggplot(aes(x = fct_reorder(Source, Value), y = Value)) + 
+  geom_bar(stat = "identity", position = position_dodge(), color="black", fill="darkred")+
+  coord_flip(ylim = c(1,6))+
+  scale_y_continuous(breaks = seq(1,6,1))+
+  theme_minimal()+
+  xlab("I worry for...")+
+  ylab("Level of worry")
+
+
+# Visualization of compliance
+
+d %>% summarize_at(.vars = dplyr::vars(matches("Compliance_\\d")), .funs = mean, na.rm= T) %>% 
+  pivot_longer(cols = everything(), names_to = "Source", values_to = "Value") %>% 
+  mutate(Source = dplyr::recode(Source,
+                                "Compliance_1"="I am well informed how I can stop\nthe spread of coronavirus",
+                                "Compliance_2"="I have done everything to reduce\nthe spread of coronavirus",
+                                "Compliance_3"="I have done everything to stop keep\nthe phyisical distance",
+                                "Compliance_4"="I feel that keeping distance\nwould have a high personal cost",
+                                "Compliance_5"="I trust others follow guidelines\nto stop the spread of coronavirus",
+                                "Compliance_6"="I have bought large extra supplies")) %>% 
+  ggplot(aes(x = fct_reorder(Source, Value), y = Value)) + 
+  geom_bar(stat = "identity", position = position_dodge(), color="black", fill="darkred")+
+  coord_flip(ylim = c(1,6))+
+  scale_y_continuous(breaks = seq(1,6,1))+
+  theme_minimal()+
+  xlab("Compliance")+
+  ylab("Level of agreement")
+
+
+# Visualization of media
+
+d %>% summarize_at(.vars = dplyr::vars(matches("media_\\d")), .funs = mean, na.rm= T) %>% 
+  pivot_longer(cols = everything(), names_to = "Source", values_to = "Value") %>% 
+  mutate(Source = dplyr::recode(Source,
+                                "Expl_media_1"="... the government",
+                                "Expl_media_2"="... independent news outlets in the coutnry",
+                                "Expl_media_3"="... news outlets outside the country",
+                                "Expl_media_4"="... friends and family",
+                                "Expl_media_5"="... social media",
+                                "Expl_media_6"="I have heard more positive than negative\nstories about people's behavior")) %>% 
+  ggplot(aes(x = fct_reorder(Source, Value), y = Value)) + 
+  geom_bar(stat = "identity", position = position_dodge(), color="black", fill="darkred")+
+  coord_flip(ylim = c(1,6))+
+  scale_y_continuous(breaks = seq(1,6,1))+
+  theme_minimal()+
+  xlab("I have sought information from...")+
+  ylab("Level of agreement")
