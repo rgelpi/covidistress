@@ -253,3 +253,42 @@ corCset <- d[, grep("Corona_concerns", names(d))]
 corClist <- list(corC_avg = c(1:5)) 
 corCscore <- scoreTest(corCset, corClist, nomiss = 0.01, rel = F)
 d <- data.frame(d, corCscore)
+
+
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+# Data Visualization########################################################
+#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+dsub<-subset(d, Country %in% c("Italy", "Canada", "France", "Germany", "Japan", "United Kingdom","United States")) #subset countries needed
+
+#load function to calculate means and SD
+data_summary <- function(data, varname, groupnames){
+  require(plyr)
+  summary_func <- function(x, col){
+    c(mean = mean(x[[col]], na.rm=TRUE),
+      sd = sd(x[[col]], na.rm=TRUE))
+  }
+  data_sum<-ddply(data, groupnames, .fun=summary_func,
+                  varname)
+  data_sum <- rename(data_sum, c("mean" = varname))
+  return(data_sum)
+}
+
+#create dataframe for the plot
+df_bar<- data_summary(dsub, varname="PSS10_avg", 
+                    groupnames="Country")
+
+head(df_bar) #check the stats
+
+#plot with basic layout. Customize at will
+ggplot(df_bar, aes(x=Country, y=PSS10_avg, width=.6)) + 
+  geom_bar(stat="identity", color="black", fill="darkred", position=position_dodge()) +
+  geom_errorbar(aes(ymin=PSS10_avg, ymax=PSS10_avg+sd), width=.2, #to obtain also the lower part of the SD bar use <ymin=PSS10_avg-sd>
+                 position=position_dodge(.9))+
+  ggtitle("Stress Levels G7 Countries (Bars represent the upper limit of the SD)")+
+  theme(plot.title = element_text(hjust = 0.5))+
+  theme_minimal()+
+  ylab("Stress")+
+  ylim(0,5)
+
+
