@@ -362,7 +362,8 @@ d %>% summarize_at(.vars = dplyr::vars(matches("Coping_\\d")), .funs = mean, na.
                                 "Expl_Coping_16"="Knowledge of actions take by government or civil service")) %>% 
   ggplot(aes(x = fct_reorder(Source, Value), y = Value)) + 
   geom_bar(stat = "identity", position = position_dodge(), color="black", fill="darkred")+
-  coord_flip(ylim = c(1,5))+
+  coord_flip(ylim = c(1,6))+
+  scale_y_continuous(breaks = seq(1,6,1), labels = c("1\nLow", "2", "3", "4", "5", "6\nHigh")) +
   theme_minimal()+
   xlab("Source of coping")+
   ylab("Level of coping")
