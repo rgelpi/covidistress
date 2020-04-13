@@ -454,4 +454,43 @@ d %>% summarize_at(.vars = dplyr::vars(matches("media_\\d")), .funs = mean, na.r
   ylab("Level of agreement")
 ```
 
+### Bivariate plots of relevant scales
+#### Basic summary statistics
+```{r}
+Hmisc::describe(d[, 136:145])
+```
+
+#### Bivariate plots to visualize the relationship between Perceived Stress, Social Support, Loneliness, and extraversion, colored by gender
+```{r, fig.width = 12, fig.height = 12}
+library(GGally)
+
+d1 <- d %>% 
+  select(PSS10_avg, Lon_avg, SPS_avg, ext, Dem_gender)
+
+levels(d1$Dem_gender)[levels(d1$Dem_gender) == "Other/would rather not say"] = "Undisclosed"
+d1$Dem_gender <- addNA(d1$Dem_gender)
+
+p <- ggpairs(d1, columnLabels = c("Perceived Stress", "Loneliness", "Perceived Support", "Extraversion", "Gender"),
+             mapping = ggplot2::aes(col = Dem_gender, alpha = .2),
+             upper = list(continuous = wrap("cor", size = 3)),
+             title = "Bivariate relationship of Perceived Stress, Social Support, Loneliness, and Extraversion")
+
+print(p, progress = FALSE)
+```
+####Bivariate plots to visualize the relationship between Perceived Stress, Social Support, Loneliness, and extraversion 
+```{r, fig.height = 12, fig.width = 12}
+p1 <- ggpairs(d1, columns = 1:4,
+             columnLabels = c("Perceived Stress", "Loneliness", "Perceived Support", "Extraversion"),
+             upper = list(continuous = wrap("cor", size = 3, colour = "darkred")),
+             lower=list(continuous=wrap("smooth", colour="darkred")),
+             diag=list(continuous=wrap("barDiag", fill="darkred")),
+             title = "Bivariate relationship of Perceived Stress, Social Support, Loneliness, and Extraversion") 
+
+print(p1, progress = FALSE)
+```
+
+```{r}
+write.csv(d, file = "clean_world.csv")
+```
+
 
