@@ -264,6 +264,18 @@ d <- data.frame(d, corCscore)
 # Data Visualization########################################################
 #$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
+# Setting some general directions for the ggplot template
+fill_color <-  "#29C7B8" # So far it was "darkred"
+line_color <- "#31233C" # So far it was "black"
+background <- "#fdf7e8" # So far this was "white"
+cust_theme <- list(theme(plot.background = element_rect(fill = background, colour = background), 
+                         panel.grid.minor = element_blank(),
+                         panel.grid.major.y = element_blank(),
+                         panel.grid.major = element_line(colour = "#e7e0eb")))
+
+
+
+
 dsub<-subset(d, Country %in% c("Italy", "Canada", "France", "Germany", "Japan", "United Kingdom","United States")) #subset countries needed
 
 #load function to calculate means and SD
@@ -330,11 +342,14 @@ d %>% summarize_at(.vars = dplyr::vars(matches("Distress_\\d")), .funs = mean, n
          "Expl_Distress_24"="No travel outside my country")
   ) %>% 
   ggplot(aes(x = fct_reorder(Source, Value), y = Value)) + 
-  geom_bar(stat = "identity", position = position_dodge(), color="black", fill="darkred")+
-  coord_flip(ylim = c(1,5))+
+  geom_bar(stat = "identity", position = position_dodge(), color="black", fill=fill_color)+
+  coord_flip(ylim = c(1,6))+
+  scale_y_continuous(breaks = seq(1,6,1), labels = c("1\nLow", "2", "3", "4", "5", "6\nHigh")) +
   theme_minimal()+
-  xlab("Source of distress")+
-  ylab("Level of distress")
+  xlab("")+
+  ylab("Level of distress")+
+  ggtitle("Following things cause stress for me during COVID-19 pandemic:")+
+  cust_theme
 
 
 
@@ -361,11 +376,14 @@ d %>% summarize_at(.vars = dplyr::vars(matches("Coping_\\d")), .funs = mean, na.
                                 "Expl_Coping_15"="God or Religion",
                                 "Expl_Coping_16"="Knowledge of actions take by government or civil service")) %>% 
   ggplot(aes(x = fct_reorder(Source, Value), y = Value)) + 
-  geom_bar(stat = "identity", position = position_dodge(), color="black", fill="darkred")+
-  coord_flip(ylim = c(1,5))+
+  geom_bar(stat = "identity", position = position_dodge(), color="black", fill=fill_color)+
+  coord_flip(ylim = c(1,6))+
+  scale_y_continuous(breaks = seq(1,6,1), labels = c("1\nLow", "2", "3", "4", "5", "6\nHigh")) +
   theme_minimal()+
   xlab("Source of coping")+
-  ylab("Level of coping")
+  ylab("Level of agreement") + 
+  ggtitle("Following things help me reduce stress during COVID-19 pandemic:")+
+  cust_theme
 
 
 
@@ -383,12 +401,14 @@ d %>% summarize_at(.vars = dplyr::vars(matches("OECD")), .funs = mean, na.rm= T)
                                 "OECD_insititutions_5"="WHO",
                                 "OECD_insititutions_6"="Government's measures against COVID")) %>% 
   ggplot(aes(x = fct_reorder(Source, Value), y = Value)) + 
-  geom_bar(stat = "identity", position = position_dodge(), color="black", fill="darkred")+
-  coord_flip(ylim = c(1,10))+
-  scale_y_continuous(breaks = seq(1,10,1))+
+  geom_bar(stat = "identity", position = position_dodge(), color="black", fill=fill_color)+
+  coord_flip(ylim = c(0,10))+
+  scale_y_continuous(breaks = seq(0,10,1), labels = c("0\nLow", "1", "2", "3", "4", "5\nModerate", "6", "7", "8", "9", "10\nHigh"))+
   theme_minimal()+
-  xlab("Source")+
-  ylab("Level of trust")
+  xlab("")+
+  ylab("Level of trust") +
+  ggtitle("How much trust do I have in ...")+
+  cust_theme
 
 
 
@@ -403,12 +423,14 @@ d %>% summarize_at(.vars = dplyr::vars(matches("concern")), .funs = mean, na.rm=
                                 "Corona_concerns_4"="... my country",
                                 "Corona_concerns_5"="... other countries")) %>% 
   ggplot(aes(x = fct_reorder(Source, Value), y = Value)) + 
-  geom_bar(stat = "identity", position = position_dodge(), color="black", fill="darkred")+
+  geom_bar(stat = "identity", position = position_dodge(), color="black", fill=fill_color)+
   coord_flip(ylim = c(1,6))+
-  scale_y_continuous(breaks = seq(1,6,1))+
+  scale_y_continuous(breaks = seq(1,6,1), labels = c("1\nLow", "2", "3", "4", "5", "6\nHigh"))+
   theme_minimal()+
-  xlab("I worry for...")+
-  ylab("Level of worry")
+  xlab("")+
+  ylab("Level of worry")+
+  ggtitle ("During COVID-19 pandemic, how much do I worry about...")+
+  cust_theme
 
 
 # Visualization of compliance
@@ -423,12 +445,14 @@ d %>% summarize_at(.vars = dplyr::vars(matches("Compliance_\\d")), .funs = mean,
                                 "Compliance_5"="I trust others follow guidelines\nto stop the spread of coronavirus",
                                 "Compliance_6"="I have bought large extra supplies")) %>% 
   ggplot(aes(x = fct_reorder(Source, Value), y = Value)) + 
-  geom_bar(stat = "identity", position = position_dodge(), color="black", fill="darkred")+
+  geom_bar(stat = "identity", position = position_dodge(), color="black", fill=fill_color)+
   coord_flip(ylim = c(1,6))+
-  scale_y_continuous(breaks = seq(1,6,1))+
+  scale_y_continuous(breaks = seq(1,6,1), labels = c("1\nLow", "2", "3", "4", "5", "6\nHigh"))+
   theme_minimal()+
-  xlab("Compliance")+
-  ylab("Level of agreement")
+  xlab("")+
+  ylab("Level of agreement")+
+  ggtitle("What have I done in response to the COVID-19 pandemic?")+
+  cust_theme
 
 
 # Visualization of media
@@ -443,9 +467,11 @@ d %>% summarize_at(.vars = dplyr::vars(matches("media_\\d")), .funs = mean, na.r
                                 "Expl_media_5"="... social media",
                                 "Expl_media_6"="I have heard more positive than negative\nstories about people's behavior")) %>% 
   ggplot(aes(x = fct_reorder(Source, Value), y = Value)) + 
-  geom_bar(stat = "identity", position = position_dodge(), color="black", fill="darkred")+
+  geom_bar(stat = "identity", position = position_dodge(), color="black", fill=fill_color)+
   coord_flip(ylim = c(1,6))+
-  scale_y_continuous(breaks = seq(1,6,1))+
+  scale_y_continuous(breaks = seq(1,6,1), labels = c("1\nLow", "2", "3", "4", "5", "6\nHigh"))+
   theme_minimal()+
-  xlab("I have sought information from...")+
-  ylab("Level of agreement")
+  xlab("")+
+  ylab("Level of agreement")+
+  ggtitle("During COVID-19 pandemic, I have sought information from...")+
+  cust_theme
