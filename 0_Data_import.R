@@ -39,7 +39,7 @@ name <- c("StartDate", "EndDate", "Status", "Progress", "Duration (in seconds)",
           "Expl_Coping_14", "Expl_Coping_15", "Expl_Coping_16", "Expl_coping_txt", 
           "Expl_media_1", "Expl_media_2", "Expl_media_3", "Expl_media_4", 
           "Expl_media_5", "Expl_media_6", "Final_open")
-d <- read_csv("COVIDiSTRESS import April 6 2020 (choice values).csv", col_names = name, skip = 3) 
+d <- read_csv("COVIDiSTRESS data extraction -_April 13 (choice values).csv", col_names = name, skip = 3) 
 da <- read_csv("COVIDiSTRESS import April 6 2020 (choice values).csv", col_names = name, skip = 3)
 
 # View data structure
@@ -53,6 +53,10 @@ d <- d %>%
 #$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 # Different checks of the data ###########################################
 #$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+#  How many participants solved more than 70% of the survey?
+
+
 
 # Completeness rate is 54% / How many participants displayed the last survey page. 
 sum(d$Finished) / nrow(d)
