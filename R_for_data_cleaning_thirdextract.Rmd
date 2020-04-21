@@ -1,0 +1,457 @@
+---
+title: "R Notebook for data cleaning"
+subtitle: Project covidistress - third data extraction
+output:
+  html_notebook:
+    toc: yes
+    toc_float: true
+---
+
+# Load libraries
+```{r, message = FALSE}
+library(pacman)
+
+p_load(qualtRics, tidyverse, stringr, multicon, psych)
+```
+
+# Load dataset
+```{r, message = FALSE}
+#This read_survey function from qualtRics keep the header and remove the first two non-data rows 
+d <- read_survey("COVIDiSTRESS  global survey April 20 (choice text).csv")
+```
+
+# Data cleaning
+## Filter for cases with consent and < 18
+```{r}
+#Filter for cases with consent and participants below 18
+d <- filter(d, Consent == "Yes") %>% 
+  filter(Dem_age >= 18)
+```
+
+```{r}
+#Order by end date
+d <- d[rev(order(as.POSIXct(d$EndDate))),]
+
+#Change R time zone to UTC
+Sys.setenv(TZ='UTC')
+```
+
+## Recode country (for the first wave of data)
+### BG
+Double check with Jesper & Grace -- Jesper said the change was made on 04/08
+```{r}
+#Before we recode country on Qualtrics for the BG language, how many people answer the survey in BG, and where are they from?
+d %>% 
+  filter(UserLanguage == "BG", StartDate <= "2020-04-08 07:48:00") %>% 
+  count(Country) 
+```
+
+```{r}
+#Move 1 country down for people responding in BG
+d <- d %>% 
+  mutate(Country = ifelse(StartDate <= "2020-04-08 07:48:00" & UserLanguage == "BG",
+                          case_when(Country == "- other" ~ NA_character_, 
+                                    Country == "Afghanistan" ~ "Afghanistan", #Already compared this with the backup Excel Grace gave
+                                    Country == "Algeria" ~ "Andorra",
+                                    Country == "Angola" ~ "Antigua and Barbuda",
+                                    Country == "Antigua and Barbuda" ~ "Argentina",
+                                    Country == "Armenia" ~ "Australia",
+                                    Country == "Australia" ~ "Austria",
+                                    Country == "Belarus" ~ "Belgium",
+                                    Country == "Brunei" ~ "Bulgaria",
+                                    Country == "Bulgaria" ~ "Burkina Faso",
+                                    
+                                    Country == "Cameroon" ~ "Canada",
+                                    Country == "Cuba" ~ "Cyprus",
+                                    Country == "Cyprus" ~ "Czech Republic",
+                                    Country == "Czech Republic" ~ "Denmark",
+                                    Country == "Fiji" ~ "Finland",
+                                    Country == "Finland" ~ "France",
+                                    Country == "Georgia" ~ "Germany",
+                                    Country == "Ghana" ~ "Greece",
+                                    Country == "Iraq" ~ "Ireland",
+                                    Country == "Ireland" ~ "Israel",
+                                    
+                                    Country == "Israel" ~ "Italy",
+                                    Country == "Japan" ~ "Jordan",
+                                    Country == "Korea, North" ~ "Korea, South",
+                                    Country == "Korea, South" ~ "Kosovo",
+                                    Country == "Liechtenstein" ~ "Lithuania",
+                                    Country == "Lithuania" ~ "Luxembourg",
+                                    Country == "Mali" ~ "Malta",
+                                    Country == "Nepal" ~ "Netherlands",
+                                    Country == "Nigeria" ~ "North Macedonia",
+                                    Country == "Poland" ~ "Portugal",
+                                    
+                                    Country == "Portugal" ~ "Qatar",
+                                    Country == "Qatar" ~ "Romania",
+                                    Country == "South Africa" ~ "Spain",
+                                    Country == "Spain" ~ "Sri Lanka",
+                                    Country == "Suriname" ~ "Sweden",
+                                    Country == "Sweden" ~ "Switzerland",
+                                    Country == "Tanzania" ~ "Thailand",
+                                    Country == "The Bahamas" ~ "Bahrain",
+                                    Country == "Tunisia" ~ "Turkey",
+                                    Country == "Uganda" ~ "Ukraine",
+                                    
+                                    Country == "Ukraine" ~ "United Arab Emirates",
+                                    Country == "United Arab Emirates" ~ "United Kingdom",
+                                    Country == "United Kingdom" ~ "United States",
+                                    Country == "Zimbabwe" ~ NA_character_) #Zimbabwe and other are coded as NA here
+                          , Country))
+
+```
+
+```{r}
+#Check for number of responses in BG again!
+d %>% 
+  filter(UserLanguage == "BG", StartDate <= "2020-04-08 07:48:00") %>% 
+  count(Country) %>% 
+  arrange(desc(n))
+```
+
+### AFR
+```{r}
+#Before we recode country on Qualtrics for the BG language, how many people answer the survey in BG, and where are they from?
+d %>% 
+  filter(UserLanguage == "AFR", StartDate <= "2020-04-07 06:48:00") %>% 
+  count(Country)
+```
+
+```{r}
+#Move 1 country down for people responding in AFR
+
+d <- d %>% 
+  mutate(Country = ifelse(UserLanguage == "AFR" & StartDate <= "2020-04-07 06:48:00",
+                          ifelse(Country == "Somalia", "South Africa", "United States"), Country))
+```
+
+```{r}
+#Check for the responses in AFR again!
+d %>% 
+  filter(UserLanguage == "AFR", StartDate <= "2020-04-07 06:48:00") %>% 
+  count(Country)
+```
+
+### Change all "other" responses in Country to NA
+```{r}
+d <- d %>% 
+  mutate(Country = ifelse(Country == "- other", NA_character_, Country))
+
+d %>% 
+  count(Country) %>% 
+  arrange(desc(n))
+```
+
+## Filter for cases from the official launch date (including responses from Denmark & Kosovo before 03/30)
+```{r}
+#Message from Jesper: I do not know the precise time when we launched, but I if you take a look at #info_from_andreas you'll se that he posted a "launch message" about 16:00. So my best guess is about 15.00 CEST, that is 1 PM (+2 UTC)
+
+test <- d %>% 
+  filter(!Country %in% c("Denmark", "Kosovo"),  StartDate <= "2020-03-30 13:00:00") 
+
+nrow(test)
+#I tried to remove cases outside of Denmark & Kosovo before 1pm 03/30, but we ended up with over 3048 observations, which is a huge number. So I settle for 00:00 03/30 
+```
+
+```{r}
+#Remove cases out of Denmark & Kosovo before 03/30
+test <- d %>% 
+  filter(!Country %in% c("Denmark", "Kosovo"),  StartDate <= "2020-03-30 00:00:00")
+
+d <- d %>% 
+  anti_join(test)
+```
+
+```{r}
+#Is there any testing answer that I miss?
+mex <- d %>% 
+  filter(!is.na(Expl_Distress_txt)) %>% 
+  filter(Expl_Distress_txt == "Please exclude - test")
+
+#No
+```
+
+
+## Rearrange marital status for some languages
+```{r}
+# Load function 'recode_if'(Aden-Buie & Gerke, 2018)
+recode_if <- function(x, condition, ...) {
+  if_else(condition, recode(x, ...), x)
+}
+
+# Fix differences in scoring between english and other languages 
+# Not sure I understand the notes Grace has in her .pdf on slack. 
+d <- d %>%
+  mutate(Dem_maritalstatus = 
+           recode_if(Dem_maritalstatus, UserLanguage != "EN", 
+                     "Single" = "Other or would rather not say",
+                     "Married/cohabiting" = "Single",
+                     "Divorced/widowed"= "Married/cohabiting",
+                     "Other or would rather not say" = "Divorced/widowed"))
+```
+
+```{r}
+#Unique level of marital status
+unique(d$Dem_maritalstatus)
+```
+
+```{r}
+#Where are participants with a "5" in marital status from?
+d %>% 
+  filter(Dem_maritalstatus == "5") %>% 
+  count(Country)
+```
+
+## Recode education level & mom's education level
+```{r}
+d$Dem_edu <- str_remove(d$Dem_edu, "- ")
+d$Dem_edu_mom <- str_remove(d$Dem_edu_mom, "- ")
+```
+
+```{r}
+unique(d$Dem_edu)
+```
+
+```{r}
+unique(d$Dem_edu_mom)
+```
+
+```{r}
+#Export a file for cases that response errorneously on marital status & education level
+mari <- d %>% 
+  filter(Dem_maritalstatus == "5")
+
+edu <- d %>% 
+  filter(Dem_edu == "1" | Dem_edu_mom == "1")
+
+mari_edu <- rbind(mari, edu) 
+
+#write.csv(mari_edu, file = "Cases_with_uninformative_education_and_maritalstatus.csv")
+```
+
+```{r}
+#Group people answering 1 and "None" in the same group and
+d$Dem_edu <- str_replace(d$Dem_edu, "None|^1", "None/Uninformative response")
+d$Dem_edu_mom <- str_replace(d$Dem_edu_mom, "None|^1", "None/Uninformative response")
+```
+
+## Recode "5" in marital status
+```{r}
+#Group 5 & Other/Rather not say in one group
+d$Dem_maritalstatus <- str_replace(d$Dem_maritalstatus, "^5|Other or would rather not say", "Undisclosed/Uninformative response")
+```
+
+## Convert character strings to factor in all demographic variables
+```{r}
+#Demographic information
+d[,12:25] <- d[,12:25] %>% 
+  mutate_if(is.character, as.factor)
+```
+
+```{r}
+glimpse(d[, 12:25])
+```
+
+## Recode AD_Check, AD_gain and AD_loss (shorten the response and turn the character to factor)
+```{r}
+d <- d %>% 
+  mutate(AD_gain = factor(recode(AD_gain, 
+                          "· If Program A is adopted, 200 people will be saved." = "Program A",
+                   "· If Program B is adopted, there is 1/3 probability that 600 people will be saved, and 2/3 probability that no people will be saved" = "Program B")),
+         AD_loss = factor(recode(AD_loss, 
+                          "· If Program C is adopted 400 people will die." = "Program C",
+                          "· If Program D is adopted there is 1/3 probability that nobody will die, and 2/3 probability that 600 people will die." = "Program D")),
+         AD_check = factor(AD_check))
+```
+
+## Convert scale responses to numeric 
+```{r}
+d <- d %>% mutate_at(
+  .vars = vars(contains("PSS10")),
+  .funs = recode, 
+  "Never" = 1, 
+  "Almost never" = 2,
+  "Sometimes" = 3, 
+  "Fairly often" = 4,
+  "Very often" = 5
+  )
+```
+
+```{r, message = FALSE}
+d <- d %>% mutate_at(
+  .vars = vars(matches("Corona_concerns|Compliance|BFF|Distress|SPS|Coping|Expl_media")),
+  .funs = recode, 
+  "Strongly disagree" = 1, 
+  "Disagree" = 2,
+  "Slightly disagree" = 3, 
+  "Slightly agree" = 4,
+  "Agree" = 5,
+  "Strongly agree" = 6
+)
+```
+
+```{r}
+# Recoding Trust_countryrmeasure
+d <- d %>% mutate(
+  Trust_countrymeasure = recode(Trust_countrymeasure,
+  "Too little" = 0,
+  "1" = 1,
+  "2" = 2,
+  "3" = 3,
+  "4" = 4,
+  "Appropriate" = 5,
+  "6" = 6,
+  "7" = 7,
+  "8" = 8,
+  "9" = 9,
+  "Too much" = 10))
+```
+
+## Create composite scores
+### PSS10 and Loneliness
+
+```{r}
+PSS10set <- d[, grep("PSS10", names(d))]
+PSS10list <- list(PSS10_avg = c(1:3, -4, -5, 6, -7, -8, 9, 10),
+                  Lon_avg = c(11:13)) 
+PSS10score <- scoreTest(PSS10set, PSS10list, nomiss = 0.01, rel = F)
+d <- data.frame(d, PSS10score)
+```
+
+```{r}
+#reliability of the scale
+alpha(PSS10set[1:10], keys = c("Scale_PSS10_UCLA_4",
+                               "Scale_PSS10_UCLA_5",
+                               "Scale_PSS10_UCLA_7",
+                               "Scale_PSS10_UCLA_8"))
+```
+
+```{r}
+alpha(PSS10set[11:13])
+```
+
+### BFF_15
+```{r}
+BFF15set <- d[, grep("BFF_15", names(d))]
+BFF15list <- list(neu = c(1, 2, -3), 
+                  ext = c(4, 5, -6),
+                  ope = c(7, 8, 9),
+                  agr = c(-10, 11, 12),
+                  con = c(13, -14, 15)) 
+BFF15score <- scoreTest(BFF15set, BFF15list, nomiss = 0.01, rel = F)
+d <- data.frame(d, BFF15score)
+```
+
+```{r}
+#reliability of Neuroticism
+alpha(BFF15set[1:3], keys = "BFF_15_3")
+```
+```{r}
+#Extraversion
+alpha(BFF15set[4:6], keys = "BFF_15_6")
+```
+```{r}
+#Openness
+alpha(BFF15set[7:9])
+```
+
+```{r}
+#Agreeableness
+alpha(BFF15set[10:12], keys = "BFF_15_10")
+```
+```{r}
+#Conscientiousness
+alpha(BFF15set[13:15], keys = "BFF_15_14")
+```
+
+### SPS10
+```{r}
+SPS10set <- d[, grep("SPS", names(d))]
+SPS10list <- list(SPS_avg = c(1:3, -4, 5, -6)) 
+SPS10score <- scoreTest(SPS10set, SPS10list, nomiss = 0.01, rel = F)
+d <- data.frame(d, SPS10score)
+```
+
+```{r}
+#reliability of the scale
+alpha(SPS10set, keys = c("SPS_4",
+                         "SPS_6"))
+```
+
+### Corona Concern
+```{r}
+corCset <- d[, grep("Corona_concerns", names(d))]
+corClist <- list(corC_avg = c(1:5)) 
+corCscore <- scoreTest(corCset, corClist, nomiss = 0.01, rel = F)
+d <- data.frame(d, corCscore)
+```
+
+```{r}
+#reliability
+alpha(corCset)
+```
+
+
+# Basic information about the completeness of the survey
+## Survey completetion for those who give consent to the study
+```{r}
+#How many participants get to the last survey page
+sum(d$Finished) / nrow(d)
+```
+
+```{r}
+#What was the average percentege of completeness in the survey for each individual?
+participant_completeness_rate <- apply(X = d[,11:135], MARGIN = 1, FUN = function(x){
+  
+  sum(!is.na(x))/length(x)
+})
+
+describe(participant_completeness_rate)
+```
+
+```{r}
+# How many persons answered only 1 question? 
+length(which(participant_completeness_rate < (2/125)))
+```
+
+```{r}
+#What was the averge completeness rate within each question?
+question_completeness_rate <- apply(X = d[,11:135], MARGIN = 2, FUN = function(x){
+  sum(!is.na(x))/length(x)
+})
+
+describe(question_completeness_rate)
+```
+
+```{r}
+# this plot is very crude but we can spot some certain issues with our survey. The general trend is similar to other online surveys however those strange drops need to be examined furhter
+# I'm leaving it for your consideration
+# Dominik: The first two drops are the experimental questions (half participant got 1 and half got 2)
+# Dominik: The 3rd, 4th and 5th are open ended questions, if I am not mistaken
+qplot(seq_along(question_completeness_rate),question_completeness_rate) + geom_line()
+```
+
+## Delete cases where participants did not answer at least one question
+```{r}
+cleaned_d <- d[, 12:144]
+
+delete.na <- function(DF, n=0) {
+  DF[rowSums(!is.na(DF)) > n,]
+}
+
+cleaned_d <- delete.na(cleaned_d) #Keep responses as long as participants provide answer to one question. This can be changed.
+
+deleted <- d %>% 
+  anti_join(cleaned_d)
+```
+
+```{r}
+#Remove hashtag and run the code below to generate a new dataset
+write.csv(cleaned_d, "COVIDiSTRESS_April_20_almost_clean.csv")
+```
+
+
+
+
+
