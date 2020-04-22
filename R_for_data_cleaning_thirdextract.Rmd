@@ -21,7 +21,7 @@ d <- read_survey("COVIDiSTRESS  global survey April 20 (choice text).csv")
 ```
 
 # Data cleaning
-## Filter for cases with consent and < 18
+## Exclude cases without consent and < 18
 ```{r}
 #Filter for cases with consent and participants below 18
 d <- filter(d, Consent == "Yes") %>% 
@@ -37,7 +37,7 @@ Sys.setenv(TZ='UTC')
 ```
 
 ## Recode country (for the first wave of data)
-### BG
+### Bulgaria
 Double check with Jesper & Grace -- Jesper said the change was made on 04/08
 ```{r}
 #Before we recode country on Qualtrics for the BG language, how many people answer the survey in BG, and where are they from?
@@ -143,7 +143,7 @@ d %>%
   arrange(desc(n))
 ```
 
-## Filter for cases from the official launch date (including responses from Denmark & Kosovo before 03/30)
+## Exclude cases before the official launch date (apart from responses from Denmark & Kosovo)
 ```{r}
 #Message from Jesper: I do not know the precise time when we launched, but I if you take a look at #info_from_andreas you'll se that he posted a "launch message" about 16:00. So my best guess is about 15.00 CEST, that is 1 PM (+2 UTC)
 
@@ -319,6 +319,8 @@ PSS10score <- scoreTest(PSS10set, PSS10list, nomiss = 0.01, rel = F)
 d <- data.frame(d, PSS10score)
 ```
 
+Reliability for the Loneliness scale:
+
 ```{r}
 #reliability of the scale
 alpha(PSS10set[1:10], keys = c("Scale_PSS10_UCLA_4",
@@ -326,6 +328,8 @@ alpha(PSS10set[1:10], keys = c("Scale_PSS10_UCLA_4",
                                "Scale_PSS10_UCLA_7",
                                "Scale_PSS10_UCLA_8"))
 ```
+
+Reliability for the Perceived Stress Scale:
 
 ```{r}
 alpha(PSS10set[11:13])
@@ -343,23 +347,36 @@ BFF15score <- scoreTest(BFF15set, BFF15list, nomiss = 0.01, rel = F)
 d <- data.frame(d, BFF15score)
 ```
 
+Reliability for the BFF Neuroticism:
+
 ```{r}
 #reliability of Neuroticism
 alpha(BFF15set[1:3], keys = "BFF_15_3")
 ```
+
+Reliability for the BFF Extraversion:
+
 ```{r}
 #Extraversion
 alpha(BFF15set[4:6], keys = "BFF_15_6")
 ```
+
+Reliability for the BFF Openness:
+
 ```{r}
 #Openness
 alpha(BFF15set[7:9])
 ```
 
+Reliability for the BFF Aggreableness:
+
 ```{r}
 #Agreeableness
 alpha(BFF15set[10:12], keys = "BFF_15_10")
 ```
+
+Reliability for the BFF Conscientiousness:
+
 ```{r}
 #Conscientiousness
 alpha(BFF15set[13:15], keys = "BFF_15_14")
@@ -368,15 +385,16 @@ alpha(BFF15set[13:15], keys = "BFF_15_14")
 ### SPS10
 ```{r}
 SPS10set <- d[, grep("SPS", names(d))]
-SPS10list <- list(SPS_avg = c(1:3, -4, 5, -6)) 
+SPS10list <- list(SPS_avg = c(1:10)) 
 SPS10score <- scoreTest(SPS10set, SPS10list, nomiss = 0.01, rel = F)
 d <- data.frame(d, SPS10score)
 ```
 
+Reliability for the Social Provision Scale:
+
 ```{r}
 #reliability of the scale
-alpha(SPS10set, keys = c("SPS_4",
-                         "SPS_6"))
+alpha(SPS10set)
 ```
 
 ### Corona Concern
@@ -386,6 +404,9 @@ corClist <- list(corC_avg = c(1:5))
 corCscore <- scoreTest(corCset, corClist, nomiss = 0.01, rel = F)
 d <- data.frame(d, corCscore)
 ```
+
+
+Reliability for the Corona concern scale:
 
 ```{r}
 #reliability
