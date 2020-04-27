@@ -405,11 +405,25 @@ alpha(SPS10set)
 cleaned_d <- d[, c(5, 7, 10, 12:143)]
 ```
 
+## Remove all new lines and ";" from the text variables for nice .csv output
+```{r}
+cleaned_d <- cleaned_d %>% 
+  mutate(Expl_Distress_txt = str_replace_all(Expl_Distress_txt, pattern = "\\n", replacement = " "),
+         Expl_coping_txt = str_replace_all(Expl_coping_txt, pattern = "\\n", replacement = " "),
+         Final_open = str_replace_all(Final_open, pattern = "\\n", replacement = " "),
+         Expl_Distress_txt = str_replace_all(Expl_Distress_txt, pattern = ";", replacement = "\\|"),
+         Expl_coping_txt = str_replace_all(Expl_coping_txt, pattern = ";", replacement = "\\|"),
+         Final_open = str_replace_all(Final_open, pattern = ";", replacement = "\\|")
+         )
+```
+
+
+
 ```{r}
 #Remove hashtag and run the code below to generate a new dataset
 #write.csv(cleaned_d, "COVIDiSTRESS_April_27_clean.csv")
-```
 
+```
 
 
 

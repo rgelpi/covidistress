@@ -1668,6 +1668,7 @@ summary {
 <li><a href="#sps10">SPS10</a></li>
 </ul></li>
 <li><a href="#select-the-variables-for-the-cleaned-version">Select the variables for the cleaned version</a></li>
+<li><a href="#remove-all-new-lines-and-from-the-text-variables-for-nice-.csv-output">Remove all new lines and “;” from the text variables for nice .csv output</a></li>
 </ul></li>
 </ul>
 </div>
@@ -2279,6 +2280,17 @@ alpha(SPS10set)</code></pre>
 <div id="select-the-variables-for-the-cleaned-version" class="section level2">
 <h2>Select the variables for the cleaned version</h2>
 <pre class="r"><code>cleaned_d &lt;- d[, c(5, 7, 10, 12:143)]</code></pre>
+</div>
+<div id="remove-all-new-lines-and-from-the-text-variables-for-nice-.csv-output" class="section level2">
+<h2>Remove all new lines and “;” from the text variables for nice .csv output</h2>
+<pre class="r"><code>cleaned_d &lt;- cleaned_d %&gt;% 
+  mutate(Expl_Distress_txt = str_replace_all(Expl_Distress_txt, pattern = &quot;\\n&quot;, replacement = &quot; &quot;),
+         Expl_coping_txt = str_replace_all(Expl_coping_txt, pattern = &quot;\\n&quot;, replacement = &quot; &quot;),
+         Final_open = str_replace_all(Final_open, pattern = &quot;\\n&quot;, replacement = &quot; &quot;),
+         Expl_Distress_txt = str_replace_all(Expl_Distress_txt, pattern = &quot;;&quot;, replacement = &quot;\\|&quot;),
+         Expl_coping_txt = str_replace_all(Expl_coping_txt, pattern = &quot;;&quot;, replacement = &quot;\\|&quot;),
+         Final_open = str_replace_all(Final_open, pattern = &quot;;&quot;, replacement = &quot;\\|&quot;)
+         )</code></pre>
 <pre class="r"><code>#Remove hashtag and run the code below to generate a new dataset
 #write.csv(cleaned_d, &quot;COVIDiSTRESS_April_27_clean.csv&quot;)</code></pre>
 </div>
