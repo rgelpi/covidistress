@@ -196,6 +196,14 @@ mex <- d %>%
 #No
 ```
 
+## Rename and recode the isolation variable
+We rename and recode the isolation variable:
+```{r}
+d <- rename(d, Dem_isolation = Dem_islolation)
+d$Dem_isolation <- str_replace(d$Dem_isolation, "^1", "Uninformative response")
+```
+
+
 ## Rearrange marital status for some languages
 
 The marital status variable was mixed up, with the exception of English. The variable was recoded to correct for that problem.
