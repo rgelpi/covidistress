@@ -459,7 +459,7 @@ cleaned_d <- cleaned_d %>%
 
 ```{r}
 #Remove hashtag and run the code below to generate a new dataset
-write.csv(cleaned_d, "COVIDiSTRESS_April_27_clean.csv")
+#write.csv(cleaned_d, "COVIDiSTRESS_April_27_clean.csv")
 
 ```
 
