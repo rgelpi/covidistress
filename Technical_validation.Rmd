@@ -1,7 +1,7 @@
 ---
-title: "Technical_validation"
-author: "Dominik-Borna Ćepulić"
-date: '10 05 2020 '
+title: "Technical validation"
+author: "Dominik-Borna Cepulic"
+date: '12. May 2020.'
 output:
   html_document: default
   pdf_document: default
@@ -22,15 +22,6 @@ d <- read_rds("Cleaned_file.rds")
 
 # Descriptive tables
 
-Descriptive table should include: 
- - countries in rows (pick only countries with more than 200 participants)
- - number of participants
- - percentage of participants with more than 50% of complete answers
- - percentage of participants with more than 90% of complete answers
- - sex (percentage of women)
- - mean age of participants and SD
-
-
 ```{r}
 # Select countries that have at least 200 participants
 
@@ -46,16 +37,27 @@ Create the table
 ```{r}
 # Calculate number of NAs per participant
 # Relevant variables for missing values are Dem_age:Final_open, with exception of AD_gain or AD_loss (everybody saw just one of these)
-length(select(dt, Dem_age:Final_open)) - 1
 
-# All in all we have 123 variables
+# Number of variables from the original dataset (no new questions included)
+var_num_old <- length(select(dt, Dem_age:Compliance_6, BFF_15_1:Final_open)) - 1 # 123 variables
 
-# Caluculate the percentage of missing values for each participant
-dt <- dt %>% mutate(Perc_full = 100 - rowSums(is.na(.))/123 * 100)
+# Number of variables from the dataset with added questions
+var_num_new <- length(select(dt, Dem_age:Final_open)) - 1 # 139 variables
+
+# Now there are 139 variables, because new questions were added.
+
+
+# Percentage of missing values is calculated usin the var_num_old (123 variables) because 
+# the NA percentage would be artificially inflated if var_num_new was used
+
+# Caluculate the percentage of missing values for each participant without the new variables (select part)
+dt <- dt %>% select(-(born_92:PS_PTSD_5)) %>% 
+  mutate(Perc_full = 100 - rowSums(is.na(.))/var_num_old * 100)
 
 no_part <- dt %>% 
   count(Country)
 
+# Help tab for sex
 sex_tab <- dt %>% 
   mutate(Dem_gender = recode(Dem_gender, "Other/would rather not say" = "Other")) %>% 
   group_by(Country, Dem_gender) %>% 
@@ -69,6 +71,8 @@ sex_tab <- dt %>%
          Prop_gender_NA = Gender_NA / n) %>% 
   select(Country, Prop_female:Prop_gender_NA)
 
+
+# Help tab for education
 edu_tab <- dt %>% 
   mutate(Dem_edu = fct_recode(Dem_edu,
                                  "College degree" = "College degree, bachelor, master",
@@ -95,6 +99,8 @@ edu_tab <- dt %>%
          Prop_uninf = Uninformative / n) %>% 
   select(Country, Prop_none:Prop_uninf)
 
+
+# Help tab for marital status
 mar_tab <- dt %>% 
    mutate(Dem_maritalstatus = recode(Dem_maritalstatus, "Other or would rather not say" = "Other/wont_say")) %>% 
   group_by(Country, Dem_maritalstatus) %>% 
@@ -110,7 +116,7 @@ mar_tab <- dt %>%
   select(Country, Prop_single, `Prop_married/cohabiting`, `Prop_divorced/widowed`, `Prop_marital_other/not_say`, Prop_marital_NA)
 
 
-
+# Main descriptive tab
 tab_desc <- dt %>% 
   group_by(Country) %>% 
   summarize(N = n(),
@@ -122,12 +128,11 @@ tab_desc <- dt %>%
   ungroup()
 
 # Join tab with sex
-
 tab_desc <- tab_desc %>% left_join(sex_tab) %>% left_join(edu_tab) %>% left_join(mar_tab, by = "Country")
 
 
 # Save tab_desc to 
-writexl::write_xlsx(tab_desc, path = "Technical validation/Descriptive_table.xlsx")
+# writexl::write_xlsx(tab_desc, path = "Technical validation/Descriptive_table.xlsx")
 ```
 
 Prepare the table for pdf
@@ -148,15 +153,12 @@ kable(digits = 2, booktabs = T, format = "latex") %>%
 For these analyses we use the cleaned dataset.  
 We calculate the reliability for:  
 - PSS10  
-- Loneliness scale  
+- SLON  
 - SPS10  
 - BFI15
 
 
-Maybe ADD NUMBER OF ITEMS PER SCALE
-
-Calculating the alpha reliabilites for all countries 
-
+The next chunk creates the functions to calculate the Cronbach's \alpha
 ```{r}
 PSS_alpha <- function(name){
   x <- dt %>% filter(Country == name) %>% select(matches("Scale_PSS10"))
@@ -169,7 +171,7 @@ PSS_alpha <- function(name){
 }
 
 Lon_alpha <- function(name){
-  x <- dt %>% filter(Country == name) %>% select(matches("Scale_Lon"))
+  x <- dt %>% filter(Country == name) %>% select(matches("Scale_SLON"))
   rel_stat <- alpha(x)
   
   rel_stat$total$raw_alpha
@@ -213,6 +215,26 @@ SPS_alpha <- function(name){
   rel_stat$total$raw_alpha
 }
 
+
+
+```
+
+### Table with reliabilities for all scales
+
+
+We calculate the reliability only for countries that have at least 200 participants.
+
+
+```{r}
+dat <- tibble(Country = table_countries[1:10], 
+              PSS10 = map_dbl(table_countries[1:10], PSS_alpha),
+              Lon = map_dbl(table_countries[1:10], Lon_alpha),
+              Neu = map_dbl(table_countries[1:10], Neu_alpha),
+              Ext = map_dbl(table_countries[1:10], Ext_alpha),
+              Ope = map_dbl(table_countries[1:10], Ope_alpha),
+              Agr = map_dbl(table_countries[1:10], Agr_alpha),
+              Con = map_dbl(table_countries[1:10], Con_alpha),
+              SPS = map_dbl(table_countries[1:10], SPS_alpha))
 ```
 
 
@@ -240,13 +262,13 @@ tab_sps <- dt %>% group_by(Country) %>%
   select(Country, N, Prop_nonmis, Mean:Alpha)
 
 # Save to file
-writexl::write_xlsx(tab_sps, path = "Technical validation/SPS.xlsx")
+#writexl::write_xlsx(tab_sps, path = "Technical validation/SPS.xlsx")
 
 
 # Print to pdf
-tab_sps %>% 
-  kable(format = "latex", booktabs = T, digits = 2, caption = "SPS scale") %>% 
-  save_kable("SPS.pdf")
+#tab_sps %>% 
+#  kable(format = "latex", booktabs = T, digits = 2, caption = "SPS scale") %>% 
+#  save_kable("SPS.pdf")
 ```
 
 ### Table PSS
@@ -273,13 +295,13 @@ tab_pss <- dt %>% group_by(Country) %>%
   select(Country, N, Prop_nonmis, Mean:Alpha)
 
 # Save to file
-writexl::write_xlsx(tab_pss, path = "Technical validation/PSS.xlsx")
+#writexl::write_xlsx(tab_pss, path = "Technical validation/PSS.xlsx")
 
 
 # Print to pdf
-tab_pss %>% 
-  kable(format = "latex", booktabs = T, digits = 2, caption = "PSS scale") %>% 
-  save_kable("PSS.pdf")
+#tab_pss %>% 
+#  kable(format = "latex", booktabs = T, digits = 2, caption = "PSS scale") %>% 
+#  save_kable("PSS.pdf")
 ```
 
 ### Table Lon
@@ -287,17 +309,17 @@ tab_pss %>%
 ```{r}
 # How many participants have all values in SPS items?
 au_lon <- dt %>% 
-  filter_at(.vars = vars(matches("Scale_Lon")),
+  filter_at(.vars = vars(matches("Scale_SLON")),
             .vars_predicate = all_vars(!is.na(.))
             ) %>% 
   count(Country)
 
 tab_lon <- dt %>% group_by(Country) %>% 
   summarize(N = n(),
-            Mean = mean(Lon_avg, na.rm = T),
-            SD = sd(Lon_avg, na.rm = T),
-            Min = min(Lon_avg, na.rm = T),
-            Max = max(Lon_avg, na.rm = T)
+            Mean = mean(SLON3_avg, na.rm = T),
+            SD = sd(SLON3_avg, na.rm = T),
+            Min = min(SLON3_avg, na.rm = T),
+            Max = max(SLON3_avg, na.rm = T)
   ) %>% 
   ungroup() %>% 
   mutate(Alpha = map_dbl(Country, Lon_alpha)) %>% 
@@ -306,13 +328,13 @@ tab_lon <- dt %>% group_by(Country) %>%
   select(Country, N, Prop_nonmis, Mean:Alpha)
 
 # Save to file
-writexl::write_xlsx(tab_lon, path = "Technical validation/Lon.xlsx")
+#writexl::write_xlsx(tab_lon, path = "Technical validation/Lon.xlsx")
 
 
 # Print to pdf
-tab_lon %>% 
-  kable(format = "latex", booktabs = T, digits = 2, caption = "Lon scale") %>% 
-  save_kable("Lon.pdf")
+#tab_lon %>% 
+#  kable(format = "latex", booktabs = T, digits = 2, caption = "Lon scale") %>% 
+#  save_kable("Lon.pdf")
 ```
 
 ### Table Neu
@@ -339,13 +361,13 @@ tab_neu <- dt %>% group_by(Country) %>%
   select(Country, N, Prop_nonmis, Mean:Alpha)
 
 # Save to file
-writexl::write_xlsx(tab_neu, path = "Technical validation/Neu.xlsx")
+#writexl::write_xlsx(tab_neu, path = "Technical validation/Neu.xlsx")
 
 
 # Print to pdf
-tab_neu %>% 
-  kable(format = "latex", booktabs = T, digits = 2, caption = "Neu scale") %>% 
-  save_kable("Neu.pdf")
+#tab_neu %>% 
+#  kable(format = "latex", booktabs = T, digits = 2, caption = "Neu scale") %>% 
+#  save_kable("Neu.pdf")
 ```
 
 
@@ -374,13 +396,13 @@ tab_ext <- dt %>% group_by(Country) %>%
   select(Country, N, Prop_nonmis, Mean:Alpha)
 
 # Save to file
-writexl::write_xlsx(tab_ext, path = "Technical validation/Ext.xlsx")
+#writexl::write_xlsx(tab_ext, path = "Technical validation/Ext.xlsx")
 
 
 # Print to pdf
-tab_ext %>% 
-  kable(format = "latex", booktabs = T, digits = 2, caption = "Ext scale") %>% 
-  save_kable("Ext.pdf")
+#tab_ext %>% 
+#  kable(format = "latex", booktabs = T, digits = 2, caption = "Ext scale") %>% 
+#  save_kable("Ext.pdf")
 ```
 
 
@@ -409,13 +431,13 @@ tab_ope <- dt %>% group_by(Country) %>%
   select(Country, N, Prop_nonmis, Mean:Alpha)
 
 # Save to file
-writexl::write_xlsx(tab_ope, path = "Technical validation/Ope.xlsx")
+#writexl::write_xlsx(tab_ope, path = "Technical validation/Ope.xlsx")
 
 
 # Print to pdf
-tab_ope %>% 
-  kable(format = "latex", booktabs = T, digits = 2, caption = "Ope scale") %>% 
-  save_kable("Ope.pdf")
+#tab_ope %>% 
+#  kable(format = "latex", booktabs = T, digits = 2, caption = "Ope scale") %>% 
+#  save_kable("Ope.pdf")
 ```
 
 
@@ -444,12 +466,12 @@ tab_agr <- dt %>% group_by(Country) %>%
 
 
 # Save to file
-writexl::write_xlsx(tab_agr, path = "Technical validation/Agr.xlsx")
+#writexl::write_xlsx(tab_agr, path = "Technical validation/Agr.xlsx")
 
 # Print to pdf
-tab_agr %>% 
-  kable(format = "latex", booktabs = T, digits = 2, caption = "Agr scale") %>% 
-  save_kable("Agr.pdf")
+#tab_agr %>% 
+#  kable(format = "latex", booktabs = T, digits = 2, caption = "Agr scale") %>% 
+#  save_kable("Agr.pdf")
 ```
 
 
@@ -477,16 +499,30 @@ tab_con <- dt %>% group_by(Country) %>%
   select(Country, N, Prop_nonmis, Mean:Alpha)
 
 # Save to file
-writexl::write_xlsx(tab_con, path = "Technical validation/Cons.xlsx")
+#writexl::write_xlsx(tab_con, path = "Technical validation/Cons.xlsx")
 
 
 
 # Print to pdf
-tab_con %>% 
-  kable(format = "latex", booktabs = T, digits = 2, caption = "Con scale") %>% 
-  save_kable("Cons.pdf")
+#tab_con %>% 
+#  kable(format = "latex", booktabs = T, digits = 2, caption = "Con scale") %>% 
+#  save_kable("Cons.pdf")
 ```
 
+Saving everything to one xlsx table
+
+```{r}
+writexl::write_xlsx(list(Descriptive = tab_desc,
+                         PSS = tab_pss,
+                         SPS = tab_sps,
+                         SLON = tab_lon,
+                         BFI_ext = tab_ext,
+                         BFI_neu = tab_neu,
+                         BFI_ope = tab_ope,
+                         BFI_agr = tab_agr,
+                         BFI_con = tab_con), 
+                    path = "Technical validation/Main_table.xlsx")
+```
 
 
 # Visualizations
@@ -514,9 +550,12 @@ pl_desc %>% ggplot(aes(x = Country, y = Part, fill = fct_rev(Var))) + geom_bar(s
   scale_fill_manual(values = c("#31233C", "#29C7B8")) +
   ylab("Number of participants") + 
   theme(legend.title = element_blank(),
-        legend.position = "none")+
-  labs(title = "The number of participants in countries with largest samples",
-       subtitle = "The green part of the bars represents participants who have more than 50% of data")
+        legend.position = "none")#+
+  #labs(title = "The number of participants in countries with largest samples",
+  #     subtitle = "The green part of the bars represents participants who have more than 50% of data")
+
+ggsave(filename = "Technical validation/Plot_desc.png", 
+       dpi = 300, units = "in", width = 8, height = 5)
 ```
 
 
@@ -538,8 +577,13 @@ pl_sex %>% filter(Dem_gender != "(Missing)") %>%
   theme_bw()+
   scale_fill_manual(values = c( "darkred", "#31233C", "#29C7B8")) +
   ylab("Number of participants") + 
-  theme(legend.title = element_blank()) +
-  labs(title = "The distribution of gender in countries with largest samples")
+  theme(legend.title = element_blank(),
+        legend.position = c(0.2, 0.9),
+        legend.background = element_blank())# +
+  #labs(title = "The distribution of gender in countries with largest samples")
+
+ggsave(filename = "Technical validation/Plot_gender.png", 
+       dpi = 300, units = "in", width = 8.3, height = 5)
 ```
 
 
@@ -567,104 +611,15 @@ pl_edu %>% filter(!(Dem_edu %in% c("(Missing)", "Uninformative"))) %>%
   theme_bw()+
   scale_fill_manual(values = c( "darkred", "#31233C", "#29C7B8")) +
   ylab("Number of participants") + 
-  theme(legend.title = element_blank()) +
-  labs(title = "The distribution of education in countries with largest samples")
+  theme(legend.title = element_blank(),
+        legend.position = c(0.2, 0.9),
+        legend.background = element_blank()) #+
+  #labs(title = "The distribution of education in countries with largest samples")
+
+ggsave(filename = "Technical validation/Plot_education.png", 
+       dpi = 300, units = "in", width = 8, height = 5)
 ```
 
-
-
-
-We calculate the reliability only for countries that have at least 200 participants.
-
-
-```{r}
-# Select all participants that have no missing values in the given variables
-#partid <- d %>% select(ResponseId, matches("Scale_PSS10|Scale_Lon|SPS_\\d|BFF_15_\\d")) %>% 
-#  mutate(Mis = rowSums(is.na(.))) %>% filter(Mis == 0) %>% pull(ResponseId)
-#
-## Count all countries that have more than 200 of such participants
-#countries <- d %>% filter(ResponseId %in% partid) %>% count(Country) %>% arrange(-n) %>% filter(n >= 200) %>% pull(Country)
-#
-#
-## Create dataframe with those countries
-#
-##da <- d %>% filter(Country %in% countries)
-
-da <- d %>% filter(Country %in% table_countries[1:10])
-
-```
-
-
-```{r}
-PSS_alpha <- function(name){
-  x <- da %>% filter(Country == name) %>% select(matches("Scale_PSS10"))
-  rel_stat <- alpha(x, keys = c("Scale_PSS10_UCLA_4",
-                         "Scale_PSS10_UCLA_5",
-                         "Scale_PSS10_UCLA_7",
-                         "Scale_PSS10_UCLA_8")
-  )
-  rel_stat$total$raw_alpha
-}
-
-Lon_alpha <- function(name){
-  x <- da %>% filter(Country == name) %>% select(matches("Scale_Lon"))
-  rel_stat <- alpha(x)
-  
-  rel_stat$total$raw_alpha
-}
-
-Neu_alpha <- function(name){
-   x <- da %>% filter(Country == name) %>% select(BFF_15_1:BFF_15_3)
-  rel_stat <- alpha(x, keys = "BFF_15_3")
-  
-  rel_stat$total$raw_alpha
-}
-Ext_alpha<- function(name){
-   x <- da %>% filter(Country == name) %>% select(BFF_15_4:BFF_15_6)
-  rel_stat <- alpha(x, keys = "BFF_15_6")
-  
-  rel_stat$total$raw_alpha
-}
-Ope_alpha<- function(name){
-   x <- da %>% filter(Country == name) %>% select(BFF_15_7:BFF_15_9)
-  rel_stat <- alpha(x)
-  
-  rel_stat$total$raw_alpha
-}
-Agr_alpha<- function(name){
-   x <- da %>% filter(Country == name) %>% select(BFF_15_10:BFF_15_12)
-  rel_stat <- alpha(x, keys = "BFF_15_10")
-  
-  rel_stat$total$raw_alpha
-}
-Con_alpha <- function(name){
-   x <- da %>% filter(Country == name) %>% select(BFF_15_13:BFF_15_15)
-  rel_stat <- alpha(x, keys = "BFF_15_14")
-  
-  rel_stat$total$raw_alpha
-}
-
-SPS_alpha <- function(name){
-   x <- da %>% filter(Country == name) %>% select(matches("SPS_\\d"))
-  rel_stat <- alpha(x)
-  
-  rel_stat$total$raw_alpha
-}
-
-
-dat <- tibble(Country = table_countries[1:10], 
-              PSS10 = map_dbl(table_countries[1:10], PSS_alpha),
-              Lon = map_dbl(table_countries[1:10], Lon_alpha),
-              Neu = map_dbl(table_countries[1:10], Neu_alpha),
-              Ext = map_dbl(table_countries[1:10], Ext_alpha),
-              Ope = map_dbl(table_countries[1:10], Ope_alpha),
-              Agr = map_dbl(table_countries[1:10], Agr_alpha),
-              Con = map_dbl(table_countries[1:10], Con_alpha),
-              SPS = map_dbl(table_countries[1:10], SPS_alpha))
-
-
-dat %>% print(n=100)
-```
 
 ## Reliabilities
 Visualizing the alpha coefficients in ggplot
@@ -681,6 +636,9 @@ dat %>% pivot_longer(cols = -Country, names_to = "Scale", values_to = "alpha") %
   theme_minimal()+
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
         legend.position = "none")
+
+ggsave(filename = "Technical validation/Plot_reliability.png", 
+       dpi = 300, units = "in", width = 8, height = 5)
 
 ```
 
