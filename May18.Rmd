@@ -567,7 +567,8 @@ cleaned_d <- cleaned_d %>%
 
 ```{r}
 #Write into new dataset
-#write.csv(cleaned_d, "COVIDiSTRESS_May_18.csv")
+write.csv(cleaned_d, "COVIDiSTRESS_May_18.csv")
+write_rds(cleaned_d, "Cleaned_file.Rds")
 ```
 
 
