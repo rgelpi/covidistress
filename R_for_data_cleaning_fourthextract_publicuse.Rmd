@@ -24,7 +24,7 @@ p_load(qualtRics, tidyverse, stringr, multicon, psych)
 # The read_survey function from qualtRics package keeps the header and removes the first two non-data rows 
 # If you want to upload newer versions of the data, please download the .csv files from https://osf.io/z39us/files/ and add the valid appropriate file name. 
 # This notebook was created for the choice version of the data files.
-d <- read_survey("COVIDiSTRESS  global survey April 27 (choice text).csv")
+d <- read_survey("COVIDiSTRESS global survey May 11 2020 (choice text).csv")
 ```
 
 # Data cleaning
@@ -459,7 +459,8 @@ cleaned_d <- cleaned_d %>%
 
 ```{r}
 #Remove hashtag and run the code below to generate a new dataset
-#write.csv(cleaned_d, "COVIDiSTRESS_April_27_clean.csv")
+write.csv(cleaned_d, "COVIDiSTRESS_May_11_clean.csv")
+write_rds(d, "Cleaned_file.rds")
 
 ```
 
