@@ -1,0 +1,686 @@
+---
+title: "Technical_validation"
+author: "Dominik-Borna Ćepulić"
+date: '10 05 2020 '
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+library(psych)
+library(RColorBrewer)
+
+d <- read_rds("Cleaned_file.rds")
+```
+
+
+# Descriptive tables
+
+Descriptive table should include: 
+ - countries in rows (pick only countries with more than 200 participants)
+ - number of participants
+ - percentage of participants with more than 50% of complete answers
+ - percentage of participants with more than 90% of complete answers
+ - sex (percentage of women)
+ - mean age of participants and SD
+
+
+```{r}
+# Select countries that have at least 200 participants
+
+table_countries <- d %>% count(Country) %>% 
+  filter(n>=200, !(Country %in% c(NA, "other"))) %>% arrange(-n) %>% pull(Country) # Exclude other and NAs
+
+dt <- d %>% filter(Country %in% table_countries)
+```
+
+## General descriptive table
+Create the table
+
+```{r}
+# Calculate number of NAs per participant
+# Relevant variables for missing values are Dem_age:Final_open, with exception of AD_gain or AD_loss (everybody saw just one of these)
+length(select(dt, Dem_age:Final_open)) - 1
+
+# All in all we have 123 variables
+
+# Caluculate the percentage of missing values for each participant
+dt <- dt %>% mutate(Perc_full = 100 - rowSums(is.na(.))/123 * 100)
+
+no_part <- dt %>% 
+  count(Country)
+
+sex_tab <- dt %>% 
+  mutate(Dem_gender = recode(Dem_gender, "Other/would rather not say" = "Other")) %>% 
+  group_by(Country, Dem_gender) %>% 
+  count() %>% 
+  pivot_wider(names_from = Dem_gender, values_from = n, values_fill = list(n = 0)) %>% 
+  rename(Gender_NA = `NA`) %>% 
+  left_join(no_part) %>% 
+  mutate(Prop_female = Female / n,
+         Prop_male = Male / n, 
+         `Prop_gender_other/not_say` = Other /n,
+         Prop_gender_NA = Gender_NA / n) %>% 
+  select(Country, Prop_female:Prop_gender_NA)
+
+edu_tab <- dt %>% 
+  mutate(Dem_edu = fct_recode(Dem_edu,
+                                 "College degree" = "College degree, bachelor, master",
+                                 "Some college" = "Some College, short continuing education or equivalent",
+                                 "PhD" = "PhD/Doctorate",
+                                 "< 12 years" = "Up to 12 years of school",
+                                 "< 9 years" = "Up to 9 years of school",
+                                 "< 6 years" = "Up to 6 years of school",
+                                 "Uninformative" = "Uninformative response")
+         ) %>% 
+  mutate(Dem_edu = fct_relevel(Dem_edu, c("None", "< 6 years", "< 9 years", "< 12 years", "Some college", "College degree", "PhD", "Uninformative"))) %>% 
+  group_by(Country, Dem_edu) %>% 
+  count() %>% 
+  pivot_wider(names_from = Dem_edu, values_from = n, values_fill = list(n = 0)) %>% 
+  left_join(no_part) %>% 
+  mutate(Prop_none = None / n,
+         Prop_6years = `< 6 years` / n, 
+         Prop_9years = `< 9 years` / n, 
+         Prop_12years = `< 12 years` / n, 
+         Prop_some_college = `Some college` / n, 
+         Prop_college = `College degree` / n, 
+         Prop_PhD = PhD / n, 
+         Prop_edu_NA = `NA` / n,
+         Prop_uninf = Uninformative / n) %>% 
+  select(Country, Prop_none:Prop_uninf)
+
+mar_tab <- dt %>% 
+   mutate(Dem_maritalstatus = recode(Dem_maritalstatus, "Other or would rather not say" = "Other/wont_say")) %>% 
+  group_by(Country, Dem_maritalstatus) %>% 
+  count() %>% 
+  pivot_wider(names_from = Dem_maritalstatus, values_from = n, values_fill = list(n = 0)) %>% 
+  rename(Marital_NA = `NA`) %>% 
+  left_join(no_part) %>% 
+  mutate(`Prop_divorced/widowed` = `Divorced/widowed` / n,
+         `Prop_married/cohabiting` = `Married/cohabiting` / n, 
+         `Prop_marital_other/not_say` = `Other/wont_say` /n,
+         Prop_marital_NA = Marital_NA / n,
+         Prop_single = Single / n) %>% 
+  select(Country, Prop_single, `Prop_married/cohabiting`, `Prop_divorced/widowed`, `Prop_marital_other/not_say`, Prop_marital_NA)
+
+
+
+tab_desc <- dt %>% 
+  group_by(Country) %>% 
+  summarize(N = n(),
+            N_50 = sum(Perc_full > 50)/N,
+            N_90 = sum(Perc_full > 90)/N,
+            M_age = mean(Dem_age, na.rm = T),
+            SD_age = sd(Dem_age, na.rm = T)
+  ) %>% arrange(-N) %>% 
+  ungroup()
+
+# Join tab with sex
+
+tab_desc <- tab_desc %>% left_join(sex_tab) %>% left_join(edu_tab) %>% left_join(mar_tab, by = "Country")
+
+
+# Save tab_desc to 
+writexl::write_xlsx(tab_desc, path = "Technical validation/Descriptive_table.xlsx")
+```
+
+Prepare the table for pdf
+
+```{r}
+# Rename the columns
+tab_desc %>% rename(Prop_50 = N_50, 
+               Prop_90 = N_90,
+               `Age mean` = M_age,
+               `Age SD` = SD_age) %>% 
+kable(digits = 2, booktabs = T, format = "latex") %>% 
+  footnote(general = "Prop_50 = Proportion of participants who have more than 50% of data; Prop_90 = Proportion of participants who have more than 90% of data",threeparttable = T) %>% save_kable(file = "Tablica.pdf" )
+```
+
+
+## Table for each scale
+
+For these analyses we use the cleaned dataset.  
+We calculate the reliability for:  
+- PSS10  
+- Loneliness scale  
+- SPS10  
+- BFI15
+
+
+Maybe ADD NUMBER OF ITEMS PER SCALE
+
+Calculating the alpha reliabilites for all countries 
+
+```{r}
+PSS_alpha <- function(name){
+  x <- dt %>% filter(Country == name) %>% select(matches("Scale_PSS10"))
+  rel_stat <- alpha(x, keys = c("Scale_PSS10_UCLA_4",
+                         "Scale_PSS10_UCLA_5",
+                         "Scale_PSS10_UCLA_7",
+                         "Scale_PSS10_UCLA_8")
+  )
+  rel_stat$total$raw_alpha
+}
+
+Lon_alpha <- function(name){
+  x <- dt %>% filter(Country == name) %>% select(matches("Scale_Lon"))
+  rel_stat <- alpha(x)
+  
+  rel_stat$total$raw_alpha
+}
+
+Neu_alpha <- function(name){
+   x <- dt %>% filter(Country == name) %>% select(BFF_15_1:BFF_15_3)
+  rel_stat <- alpha(x, keys = "BFF_15_3")
+  
+  rel_stat$total$raw_alpha
+}
+Ext_alpha<- function(name){
+   x <- dt %>% filter(Country == name) %>% select(BFF_15_4:BFF_15_6)
+  rel_stat <- alpha(x, keys = "BFF_15_6")
+  
+  rel_stat$total$raw_alpha
+}
+Ope_alpha<- function(name){
+   x <- dt %>% filter(Country == name) %>% select(BFF_15_7:BFF_15_9)
+  rel_stat <- alpha(x)
+  
+  rel_stat$total$raw_alpha
+}
+Agr_alpha<- function(name){
+   x <- dt %>% filter(Country == name) %>% select(BFF_15_10:BFF_15_12)
+  rel_stat <- alpha(x, keys = "BFF_15_10")
+  
+  rel_stat$total$raw_alpha
+}
+Con_alpha <- function(name){
+   x <- dt %>% filter(Country == name) %>% select(BFF_15_13:BFF_15_15)
+  rel_stat <- alpha(x, keys = "BFF_15_14")
+  
+  rel_stat$total$raw_alpha
+}
+
+SPS_alpha <- function(name){
+   x <- dt %>% filter(Country == name) %>% select(matches("SPS_\\d"))
+  rel_stat <- alpha(x)
+  
+  rel_stat$total$raw_alpha
+}
+
+```
+
+
+### Table SPS
+
+```{r}
+# How many participants have all values in SPS items?
+au_sps <- dt %>% 
+  filter_at(.vars = vars(matches("SPS_\\d")),
+            .vars_predicate = all_vars(!is.na(.))
+            ) %>% 
+  count(Country)
+
+tab_sps <- dt %>% group_by(Country) %>% 
+  summarize(N = n(),
+            Mean = mean(SPS_avg, na.rm = T),
+            SD = sd(SPS_avg, na.rm = T),
+            Min = min(SPS_avg, na.rm = T),
+            Max = max(SPS_avg, na.rm = T)
+  ) %>% 
+  ungroup() %>% 
+  mutate(Alpha = map_dbl(Country, SPS_alpha)) %>% 
+  left_join(au_sps, by = "Country") %>% 
+  mutate(Prop_nonmis = n/N) %>% 
+  select(Country, N, Prop_nonmis, Mean:Alpha)
+
+# Save to file
+writexl::write_xlsx(tab_sps, path = "Technical validation/SPS.xlsx")
+
+
+# Print to pdf
+tab_sps %>% 
+  kable(format = "latex", booktabs = T, digits = 2, caption = "SPS scale") %>% 
+  save_kable("SPS.pdf")
+```
+
+### Table PSS
+
+```{r}
+# How many participants have all values in SPS items?
+au_pss <- dt %>% 
+  filter_at(.vars = vars(matches("Scale_PSS10")),
+            .vars_predicate = all_vars(!is.na(.))
+            ) %>% 
+  count(Country)
+
+tab_pss <- dt %>% group_by(Country) %>% 
+  summarize(N = n(),
+            Mean = mean(PSS10_avg, na.rm = T),
+            SD = sd(PSS10_avg, na.rm = T),
+            Min = min(PSS10_avg, na.rm = T),
+            Max = max(PSS10_avg, na.rm = T)
+  ) %>% 
+  ungroup() %>% 
+  mutate(Alpha = map_dbl(Country, PSS_alpha)) %>% 
+  left_join(au_pss, by = "Country") %>% 
+  mutate(Prop_nonmis = n/N) %>% 
+  select(Country, N, Prop_nonmis, Mean:Alpha)
+
+# Save to file
+writexl::write_xlsx(tab_pss, path = "Technical validation/PSS.xlsx")
+
+
+# Print to pdf
+tab_pss %>% 
+  kable(format = "latex", booktabs = T, digits = 2, caption = "PSS scale") %>% 
+  save_kable("PSS.pdf")
+```
+
+### Table Lon
+
+```{r}
+# How many participants have all values in SPS items?
+au_lon <- dt %>% 
+  filter_at(.vars = vars(matches("Scale_Lon")),
+            .vars_predicate = all_vars(!is.na(.))
+            ) %>% 
+  count(Country)
+
+tab_lon <- dt %>% group_by(Country) %>% 
+  summarize(N = n(),
+            Mean = mean(Lon_avg, na.rm = T),
+            SD = sd(Lon_avg, na.rm = T),
+            Min = min(Lon_avg, na.rm = T),
+            Max = max(Lon_avg, na.rm = T)
+  ) %>% 
+  ungroup() %>% 
+  mutate(Alpha = map_dbl(Country, Lon_alpha)) %>% 
+  left_join(au_lon, by = "Country") %>% 
+  mutate(Prop_nonmis = n/N) %>% 
+  select(Country, N, Prop_nonmis, Mean:Alpha)
+
+# Save to file
+writexl::write_xlsx(tab_lon, path = "Technical validation/Lon.xlsx")
+
+
+# Print to pdf
+tab_lon %>% 
+  kable(format = "latex", booktabs = T, digits = 2, caption = "Lon scale") %>% 
+  save_kable("Lon.pdf")
+```
+
+### Table Neu
+
+```{r}
+# How many participants have all values in SPS items?
+au_neu <- dt %>% 
+  filter_at(.vars = vars(BFF_15_1:BFF_15_3),
+            .vars_predicate = all_vars(!is.na(.))
+            ) %>% 
+  count(Country)
+
+tab_neu <- dt %>% group_by(Country) %>% 
+  summarize(N = n(),
+            Mean = mean(neu, na.rm = T),
+            SD = sd(neu, na.rm = T),
+            Min = min(neu, na.rm = T),
+            Max = max(neu, na.rm = T)
+  ) %>% 
+  ungroup() %>% 
+  mutate(Alpha = map_dbl(Country, Neu_alpha)) %>% 
+  left_join(au_neu, by = "Country") %>% 
+  mutate(Prop_nonmis = n/N) %>% 
+  select(Country, N, Prop_nonmis, Mean:Alpha)
+
+# Save to file
+writexl::write_xlsx(tab_neu, path = "Technical validation/Neu.xlsx")
+
+
+# Print to pdf
+tab_neu %>% 
+  kable(format = "latex", booktabs = T, digits = 2, caption = "Neu scale") %>% 
+  save_kable("Neu.pdf")
+```
+
+
+
+### Table Ext
+
+```{r}
+# How many participants have all values in SPS items?
+au_ext <- dt %>% 
+  filter_at(.vars = vars(BFF_15_4:BFF_15_6),
+            .vars_predicate = all_vars(!is.na(.))
+            ) %>% 
+  count(Country)
+
+tab_ext <- dt %>% group_by(Country) %>% 
+  summarize(N = n(),
+            Mean = mean(ext, na.rm = T),
+            SD = sd(ext, na.rm = T),
+            Min = min(ext, na.rm = T),
+            Max = max(ext, na.rm = T)
+  ) %>% 
+  ungroup() %>% 
+  mutate(Alpha = map_dbl(Country, Ext_alpha)) %>% 
+  left_join(au_ext, by = "Country") %>% 
+  mutate(Prop_nonmis = n/N) %>% 
+  select(Country, N, Prop_nonmis, Mean:Alpha)
+
+# Save to file
+writexl::write_xlsx(tab_ext, path = "Technical validation/Ext.xlsx")
+
+
+# Print to pdf
+tab_ext %>% 
+  kable(format = "latex", booktabs = T, digits = 2, caption = "Ext scale") %>% 
+  save_kable("Ext.pdf")
+```
+
+
+
+### Table Ope
+
+```{r}
+# How many participants have all values in SPS items?
+au_ope <- dt %>% 
+  filter_at(.vars = vars(BFF_15_7:BFF_15_9),
+            .vars_predicate = all_vars(!is.na(.))
+            ) %>% 
+  count(Country)
+
+tab_ope <- dt %>% group_by(Country) %>% 
+  summarize(N = n(),
+            Mean = mean(ope, na.rm = T),
+            SD = sd(ope, na.rm = T),
+            Min = min(ope, na.rm = T),
+            Max = max(ope, na.rm = T)
+  ) %>% 
+  ungroup() %>% 
+  mutate(Alpha = map_dbl(Country, Ope_alpha)) %>% 
+  left_join(au_ope, by = "Country") %>% 
+  mutate(Prop_nonmis = n/N) %>% 
+  select(Country, N, Prop_nonmis, Mean:Alpha)
+
+# Save to file
+writexl::write_xlsx(tab_ope, path = "Technical validation/Ope.xlsx")
+
+
+# Print to pdf
+tab_ope %>% 
+  kable(format = "latex", booktabs = T, digits = 2, caption = "Ope scale") %>% 
+  save_kable("Ope.pdf")
+```
+
+
+### Table Agr
+
+```{r}
+# How many participants have all values in SPS items?
+au_agr <- dt %>% 
+  filter_at(.vars = vars(BFF_15_10:BFF_15_12),
+            .vars_predicate = all_vars(!is.na(.))
+            ) %>% 
+  count(Country)
+
+tab_agr <- dt %>% group_by(Country) %>% 
+  summarize(N = n(),
+            Mean = mean(agr, na.rm = T),
+            SD = sd(agr, na.rm = T),
+            Min = min(agr, na.rm = T),
+            Max = max(agr, na.rm = T)
+  ) %>% 
+  ungroup() %>% 
+  mutate(Alpha = map_dbl(Country, Agr_alpha)) %>% 
+  left_join(au_agr, by = "Country") %>% 
+  mutate(Prop_nonmis = n/N) %>% 
+  select(Country, N, Prop_nonmis, Mean:Alpha)
+
+
+# Save to file
+writexl::write_xlsx(tab_agr, path = "Technical validation/Agr.xlsx")
+
+# Print to pdf
+tab_agr %>% 
+  kable(format = "latex", booktabs = T, digits = 2, caption = "Agr scale") %>% 
+  save_kable("Agr.pdf")
+```
+
+
+### Table Con
+
+```{r}
+# How many participants have all values in SPS items?
+au_con <- dt %>% 
+  filter_at(.vars = vars(BFF_15_13:BFF_15_15),
+            .vars_predicate = all_vars(!is.na(.))
+            ) %>% 
+  count(Country)
+
+tab_con <- dt %>% group_by(Country) %>% 
+  summarize(N = n(),
+            Mean = mean(con, na.rm = T),
+            SD = sd(con, na.rm = T),
+            Min = min(con, na.rm = T),
+            Max = max(con, na.rm = T)
+  ) %>% 
+  ungroup() %>% 
+  mutate(Alpha = map_dbl(Country, Con_alpha)) %>% 
+  left_join(au_con, by = "Country") %>% 
+  mutate(Prop_nonmis = n/N) %>% 
+  select(Country, N, Prop_nonmis, Mean:Alpha)
+
+# Save to file
+writexl::write_xlsx(tab_con, path = "Technical validation/Cons.xlsx")
+
+
+
+# Print to pdf
+tab_con %>% 
+  kable(format = "latex", booktabs = T, digits = 2, caption = "Con scale") %>% 
+  save_kable("Cons.pdf")
+```
+
+
+
+# Visualizations
+
+## Number participants
+
+```{r}
+pl_desc <- dt %>% 
+  group_by(Country) %>% 
+  summarize(N = n(),
+            N_50 = sum(Perc_full > 50),
+            Nx = N - N_50
+  ) %>% 
+  ungroup() %>% 
+  top_n(n = 10, wt = N) %>% 
+  mutate(Country = fct_reorder(Country, N)) %>% 
+  select(-N) %>% 
+  pivot_longer(cols = N_50:Nx, names_to = "Var", values_to = "Part")
+
+country_levels <- levels(pl_desc$Country)
+
+ 
+pl_desc %>% ggplot(aes(x = Country, y = Part, fill = fct_rev(Var))) + geom_bar(stat = "identity")+
+  theme_bw()+
+  scale_fill_manual(values = c("#31233C", "#29C7B8")) +
+  ylab("Number of participants") + 
+  theme(legend.title = element_blank(),
+        legend.position = "none")+
+  labs(title = "The number of participants in countries with largest samples",
+       subtitle = "The green part of the bars represents participants who have more than 50% of data")
+```
+
+
+## Sex
+
+
+```{r}
+pl_sex <- dt %>% 
+  group_by(Country, Dem_gender) %>% 
+  summarize(N = n()) %>% 
+  ungroup() %>% 
+  filter(Country %in% table_countries[1:10]) %>% 
+  mutate(Country = fct_relevel(Country, country_levels[1:10]),
+         Dem_gender = fct_reorder(fct_explicit_na(Dem_gender), N, )) 
+
+ 
+pl_sex %>% filter(Dem_gender != "(Missing)") %>% 
+  ggplot(aes(x = Country, y = N, fill = Dem_gender)) + geom_bar(stat = "identity")+
+  theme_bw()+
+  scale_fill_manual(values = c( "darkred", "#31233C", "#29C7B8")) +
+  ylab("Number of participants") + 
+  theme(legend.title = element_blank()) +
+  labs(title = "The distribution of gender in countries with largest samples")
+```
+
+
+
+## Education
+
+
+```{r}
+pl_edu <- dt %>% 
+  mutate(Dem_edu = fct_collapse(Dem_edu,
+                                `Elementary` = c("Up to 9 years of school", "Up to 6 years of school", "None"),
+                                `Higher or some college` = c("Up to 12 years of school", "Some College, short continuing education or equivalent"),
+                                `College or PhD` = c("College degree, bachelor, master", "PhD/Doctorate"),
+                                Uninformative = c(NA, "Uninformative response"))) %>% 
+  group_by(Country, Dem_edu) %>% 
+  summarize(N = n()) %>% 
+  ungroup() %>% 
+  filter(Country %in% table_countries[1:10]) %>% 
+  mutate(Country = fct_relevel(Country, country_levels[1:10]),
+         Dem_edu = fct_relevel(fct_explicit_na(Dem_edu), c("Elementary", "Higher or some college", "College or PhD", "Uninformative", NA))) 
+
+ 
+pl_edu %>% filter(!(Dem_edu %in% c("(Missing)", "Uninformative"))) %>% 
+  ggplot(aes(x = Country, y = N, fill = Dem_edu)) + geom_bar(stat = "identity")+
+  theme_bw()+
+  scale_fill_manual(values = c( "darkred", "#31233C", "#29C7B8")) +
+  ylab("Number of participants") + 
+  theme(legend.title = element_blank()) +
+  labs(title = "The distribution of education in countries with largest samples")
+```
+
+
+
+
+We calculate the reliability only for countries that have at least 200 participants.
+
+
+```{r}
+# Select all participants that have no missing values in the given variables
+#partid <- d %>% select(ResponseId, matches("Scale_PSS10|Scale_Lon|SPS_\\d|BFF_15_\\d")) %>% 
+#  mutate(Mis = rowSums(is.na(.))) %>% filter(Mis == 0) %>% pull(ResponseId)
+#
+## Count all countries that have more than 200 of such participants
+#countries <- d %>% filter(ResponseId %in% partid) %>% count(Country) %>% arrange(-n) %>% filter(n >= 200) %>% pull(Country)
+#
+#
+## Create dataframe with those countries
+#
+##da <- d %>% filter(Country %in% countries)
+
+da <- d %>% filter(Country %in% table_countries[1:10])
+
+```
+
+
+```{r}
+PSS_alpha <- function(name){
+  x <- da %>% filter(Country == name) %>% select(matches("Scale_PSS10"))
+  rel_stat <- alpha(x, keys = c("Scale_PSS10_UCLA_4",
+                         "Scale_PSS10_UCLA_5",
+                         "Scale_PSS10_UCLA_7",
+                         "Scale_PSS10_UCLA_8")
+  )
+  rel_stat$total$raw_alpha
+}
+
+Lon_alpha <- function(name){
+  x <- da %>% filter(Country == name) %>% select(matches("Scale_Lon"))
+  rel_stat <- alpha(x)
+  
+  rel_stat$total$raw_alpha
+}
+
+Neu_alpha <- function(name){
+   x <- da %>% filter(Country == name) %>% select(BFF_15_1:BFF_15_3)
+  rel_stat <- alpha(x, keys = "BFF_15_3")
+  
+  rel_stat$total$raw_alpha
+}
+Ext_alpha<- function(name){
+   x <- da %>% filter(Country == name) %>% select(BFF_15_4:BFF_15_6)
+  rel_stat <- alpha(x, keys = "BFF_15_6")
+  
+  rel_stat$total$raw_alpha
+}
+Ope_alpha<- function(name){
+   x <- da %>% filter(Country == name) %>% select(BFF_15_7:BFF_15_9)
+  rel_stat <- alpha(x)
+  
+  rel_stat$total$raw_alpha
+}
+Agr_alpha<- function(name){
+   x <- da %>% filter(Country == name) %>% select(BFF_15_10:BFF_15_12)
+  rel_stat <- alpha(x, keys = "BFF_15_10")
+  
+  rel_stat$total$raw_alpha
+}
+Con_alpha <- function(name){
+   x <- da %>% filter(Country == name) %>% select(BFF_15_13:BFF_15_15)
+  rel_stat <- alpha(x, keys = "BFF_15_14")
+  
+  rel_stat$total$raw_alpha
+}
+
+SPS_alpha <- function(name){
+   x <- da %>% filter(Country == name) %>% select(matches("SPS_\\d"))
+  rel_stat <- alpha(x)
+  
+  rel_stat$total$raw_alpha
+}
+
+
+dat <- tibble(Country = table_countries[1:10], 
+              PSS10 = map_dbl(table_countries[1:10], PSS_alpha),
+              Lon = map_dbl(table_countries[1:10], Lon_alpha),
+              Neu = map_dbl(table_countries[1:10], Neu_alpha),
+              Ext = map_dbl(table_countries[1:10], Ext_alpha),
+              Ope = map_dbl(table_countries[1:10], Ope_alpha),
+              Agr = map_dbl(table_countries[1:10], Agr_alpha),
+              Con = map_dbl(table_countries[1:10], Con_alpha),
+              SPS = map_dbl(table_countries[1:10], SPS_alpha))
+
+
+dat %>% print(n=100)
+```
+
+## Reliabilities
+Visualizing the alpha coefficients in ggplot
+
+```{r}
+dat %>% pivot_longer(cols = -Country, names_to = "Scale", values_to = "alpha") %>% 
+    ggplot(aes(x = fct_reorder(Scale, alpha), y = alpha, fill = fct_reorder(Scale, alpha))) + geom_bar(stat = "identity") +
+  facet_wrap(~Country, nrow = 2)+
+  xlab("Scale")+
+  ylab("Cronbach's alpha")+
+  scale_y_continuous(breaks = seq(0, 0.9, 0.2))+
+  #scale_fill_manual(values = brewer.pal(8,"BrBG"))+
+  scale_fill_manual(values = c('#29c7b8', '#37aea5', '#3d9592', '#407d80', '#3f656e', '#3d4f5d', '#38394c', '#31233c'))+
+  theme_minimal()+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
+        legend.position = "none")
+
+```
+
